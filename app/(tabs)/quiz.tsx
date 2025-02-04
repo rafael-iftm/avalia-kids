@@ -15,7 +15,7 @@ export default function QuizScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: 'Quiz' });
+    navigation.setOptions({ title: 'Avaliação' });
   }, [navigation]);
 
   const question = quizData[currentQuestionIndex];
