@@ -13,7 +13,7 @@ export default function ResultScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Avaliação Concluído!</Text>
+      <Text style={styles.title}>Avaliação Concluída!</Text>
       <Text style={styles.subtitle}>Parabéns por finalizar a avaliação.</Text>
       <Button title="Voltar ao Início" onPress={() => router.replace('/')} />
     </View>
