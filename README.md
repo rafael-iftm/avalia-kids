@@ -1,3 +1,9 @@
+## 👥 **Integrantes do Grupo**
+
+- 👨‍💻 **Rafael Andrade Prado** - [@rafael-iftm](https://github.com/rafael-iftm)  
+- 👨‍💻 **Lucas José Arantes Silva** - [@LucasJoseArantes](https://github.com/LucasJoseArantes)  
+- 👩‍💻 **Gabriela de Oliveira Ferreira** - [@gabrieelaoliv](https://github.com/gabrieelaoliv)
+
 ## 📚 Documentações do Projeto
 
 1. 📑[**Documentação do App Diagnóstico de Introdução**](https://docs.google.com/document/d/1THPYEIUaSC15rjibWeJmcnnHxD8x3AJMOqJuseEhaTo/edit?usp=sharing)  
