@@ -1,9 +1,9 @@
 ## 📚 Documentações do Projeto
 
-1. [📑 **Documentação do App Diagnóstico de Introdução**](https://docs.google.com/document/d/1THPYEIUaSC15rjibWeJmcnnHxD8x3AJMOqJuseEhaTo/edit?usp=sharing)  
+1. 📑[**Documentação do App Diagnóstico de Introdução**](https://docs.google.com/document/d/1THPYEIUaSC15rjibWeJmcnnHxD8x3AJMOqJuseEhaTo/edit?usp=sharing)  
    Detalhes completos sobre o aplicativo de diagnóstico educacional, incluindo requisitos funcionais, interfaces, e o público-alvo de crianças entre 6 e 10 anos. Contém especificações de acessibilidade, gamificação e layout adaptado para um ambiente lúdico e interativo.
 
-2. [📦 **Documentação da API e Payloads**](https://docs.google.com/document/d/13IP7fUWq2S4QqGz-Dw2eXgu5wZH0xhV3hncvay0K_Nw/edit?usp=sharing)  
+2. 📦[**Documentação da API e Payloads**](https://docs.google.com/document/d/13IP7fUWq2S4QqGz-Dw2eXgu5wZH0xhV3hncvay0K_Nw/edit?usp=sharing)  
    Estrutura detalhada dos endpoints RESTful, exemplos de payloads JSON e integrações com banco de dados (MongoDB), cobrindo autenticação, gestão de questões, respostas, diagnósticos, e logs de sistema.
 
 ## 🛠️ **Como Executar**
