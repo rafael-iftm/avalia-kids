@@ -8,14 +8,14 @@ export default function ResultScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: 'Resultado' });
+    navigation.setOptions({ title: 'Resultado', headerBackVisible: false });
   }, [navigation]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Quiz Concluído!</Text>
       <Text style={styles.subtitle}>Parabéns por finalizar o quiz.</Text>
-      <Button title="Voltar ao Início" onPress={() => router.push('/')} />
+      <Button title="Voltar ao Início" onPress={() => router.replace('/')} />
     </View>
   );
 }

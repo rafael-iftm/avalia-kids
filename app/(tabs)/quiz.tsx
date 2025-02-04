@@ -24,7 +24,7 @@ export default function QuizScreen() {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      router.push('/result');
+      router.replace('/result');
     }
   };
 

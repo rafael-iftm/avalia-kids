@@ -25,7 +25,7 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>Pronto para testar seus conhecimentos de forma divertida?</Text>
 
       {/* Botão principal */}
-      <TouchableOpacity style={styles.startButton} onPress={() => router.push('/quiz')}>
+      <TouchableOpacity style={styles.startButton} onPress={() => router.replace('/quiz')}>
         <Ionicons name="play-circle" size={24} color="#fff" style={styles.icon} />
         <Text style={styles.startButtonText}>Começar Avaliação</Text>
       </TouchableOpacity>
