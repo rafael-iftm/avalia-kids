@@ -8,7 +8,7 @@ export default function ResultScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: 'Início' });
+    navigation.setOptions({ title: 'Resultado' });
   }, [navigation]);
 
   return (
