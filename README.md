@@ -16,7 +16,7 @@
 
 3. 🎨 [**Protótipo do Figma**](https://www.figma.com/design/jQ54fsqZ8SFVmVj9nRLiAN/Projeto?node-id=0-1&p=f&t=hpiOFsjn0FL65iJv-0)  
    Visualização do protótipo das telas do aplicativo, incluindo a tela de avaliação, início e resultado.  
-   📂 Também disponível na pasta: `📦 doc/prototype/v1`
+   📂 Também disponível na pasta: `📦 doc/prototipo/v1`
 
 ## 🛠️ **Como Executar**
 
