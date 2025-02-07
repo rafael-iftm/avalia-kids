@@ -7,9 +7,13 @@ import quizData from '../../data/quizData';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [disabledOptions, setDisabledOptions] = useState<string[]>([]);
   const totalQuestions = quizData.length;
   const router = useRouter();
   const navigation = useNavigation();
@@ -21,15 +25,26 @@ export default function QuizScreen() {
   const question = quizData[currentQuestionIndex];
 
   const handleAnswerPress = (option: string) => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setSelectedAnswer(option);
+
+    if (option === question.correct) {
+      setShowConfetti(true);
+      setTimeout(() => {
+        setShowConfetti(false);
+        if (currentQuestionIndex < totalQuestions - 1) {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setSelectedAnswer(null);
+          setDisabledOptions([]);
+        } else {
+          router.replace('/result');
+        }
+      }, 1500);
     } else {
-      router.replace('/result');
+      setDisabledOptions([...disabledOptions, option]);
     }
   };
 
-  // Lógica para calcular o progresso
-  const progress = ((currentQuestionIndex) / totalQuestions) * 100;
+  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   return (
     <View style={styles.container}>
@@ -55,9 +70,27 @@ export default function QuizScreen() {
         <AnswerButton
           key={index}
           label={option}
-          onPress={() => handleAnswerPress(option)}
+          onPress={() => !disabledOptions.includes(option) && handleAnswerPress(option)}
+          style={
+            disabledOptions.includes(option)
+              ? styles.incorrectButton
+              : selectedAnswer === option && option !== question.correct
+              ? styles.incorrectButton
+              : {}
+          }
         />
       ))}
+
+      {/* Animação de confetes */}
+      {showConfetti && (
+        <ConfettiCannon
+          count={200}
+          origin={{ x: 0, y: 0 }}
+          fadeOut={true}
+          explosionSpeed={500}
+          fallSpeed={1500}
+        />
+      )}
     </View>
   );
 }
@@ -74,5 +107,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 20,
     borderRadius: 10,
+  },
+  incorrectButton: {
+    backgroundColor: '#B0BEC5',
   },
 });

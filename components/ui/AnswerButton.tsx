@@ -1,13 +1,14 @@
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 
 interface AnswerButtonProps {
   label: string;
   onPress: () => void;
+  style?: ViewStyle;
 }
 
-export default function AnswerButton({ label, onPress }: AnswerButtonProps) {
+export default function AnswerButton({ label, onPress, style }: AnswerButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
   );
@@ -15,7 +16,7 @@ export default function AnswerButton({ label, onPress }: AnswerButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#388E3C',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

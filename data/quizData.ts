@@ -4,6 +4,7 @@ const quizData = [
     options: ['Bola', 'Casa', 'Amora', 'Pato'],
     correct: 'Amora',
     image: require('../assets/images/question1.png'), // Imagem da pergunta 1
+    
   },
   {
     text: 'Quanto é 2 + 2?',
