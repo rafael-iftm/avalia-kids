@@ -1,8 +1,9 @@
 ## 👥 **Integrantes do Grupo**
 
 - 👨‍💻 **Rafael Andrade Prado** - [@rafael-iftm](https://github.com/rafael-iftm)  
-- 👨‍💻 **Lucas José Arantes Silva** - [@LucasJoseArantes](https://github.com/LucasJoseArantes)  
-- 👩‍💻 **Gabriela de Oliveira Ferreira** - [@gabrieelaoliv](https://github.com/gabrieelaoliv)
+- 👨‍💻 **Lucas José Arantes Silva** - [@LucasJoseArantes](https://github.com/LucasJoseArantes)
+- 👨‍💻 **Ezequiel de Oliveira Santana** - [@gabrieelaoliv](https://github.com/gabrieelaoliv)
+- 👩‍💻 **Gabriela de Oliveira Ferreira** - [@EzequielOS](https://github.com/EzequielOS)
 
 ## 📚 Documentações do Projeto
 
