@@ -155,6 +155,7 @@ export default function RegisterScreen() {
       <TouchableOpacity 
         style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
         disabled={!isFormValid()}
+        onPress={() => router.push('/login')}
       >
         <Text style={styles.primaryButtonText}>Continuar</Text>
       </TouchableOpacity>

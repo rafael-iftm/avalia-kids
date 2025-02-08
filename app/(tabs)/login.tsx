@@ -72,6 +72,7 @@ export default function LoginScreen() {
       <TouchableOpacity 
         style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
         disabled={!isFormValid()}
+        onPress={() => router.push('/quiz')}
       >
         <Text style={styles.primaryButtonText}>Continuar</Text>
       </TouchableOpacity>
