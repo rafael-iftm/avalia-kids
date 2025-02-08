@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
@@ -33,60 +33,57 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Ícone de voltar */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        {/* Título */}
+        <Text style={styles.title}>Entrar</Text>
 
-      {/* Título */}
-      <Text style={styles.title}>Entrar</Text>
-
-      {/* Campo de e-mail */}
-      <TextInput 
-        placeholder="Email" 
-        placeholderTextColor="#888888"
-        style={styles.input} 
-        value={email} 
-        onChangeText={validateEmail} 
-        keyboardType="email-address"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-      {/* Campo de senha */}
-      <View style={styles.passwordContainer}>
-        <TextInput
-          placeholder="Senha"
+        {/* Campo de e-mail */}
+        <TextInput 
+          placeholder="Email" 
           placeholderTextColor="#888888"
-          secureTextEntry={!passwordVisible}
-          style={styles.passwordInput}
-          value={password}
-          onChangeText={setPassword}
+          style={styles.input} 
+          value={email} 
+          onChangeText={validateEmail} 
+          keyboardType="email-address"
         />
-        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-          <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
-        </TouchableOpacity>
-      </View>
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-      {/* Botão de continuar */}
-      <TouchableOpacity 
-        style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
-        disabled={!isFormValid()}
-        onPress={() => router.push('/quiz')}
-      >
-        <Text style={styles.primaryButtonText}>Continuar</Text>
-      </TouchableOpacity>
+        {/* Campo de senha */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor="#888888"
+            secureTextEntry={!passwordVisible}
+            style={styles.passwordInput}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+            <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
 
-      {/* Links para registro e recuperação de senha */}
-      <View style={styles.linksContainer}>
-        <TouchableOpacity onPress={() => router.push('/register')}>
-          <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
+        {/* Botão de continuar */}
+        <TouchableOpacity 
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+          disabled={!isFormValid()}
+          onPress={() => router.push('/studentRegistration')}
+        >
+          <Text style={styles.primaryButtonText}>Continuar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push('/forgot-password')}>
-          <Text style={styles.linkText}>Esqueceu sua senha?</Text>
-        </TouchableOpacity>
+
+        {/* Links para registro e recuperação de senha */}
+        <View style={styles.linksContainer}>
+          <TouchableOpacity onPress={() => router.push('/register')}>
+            <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/forgotPassword')}>
+            <Text style={styles.linkText}>Esqueceu sua senha?</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

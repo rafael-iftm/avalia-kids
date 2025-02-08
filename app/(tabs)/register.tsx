@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
@@ -59,112 +59,114 @@ export default function RegisterScreen() {
   };
   
   return (
-    <View style={styles.container}>
-      {/* Ícone de voltar */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        {/* Ícone de voltar */}
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#000" />
+        </TouchableOpacity>
 
-      {/* Título */}
-      <Text style={styles.title}>Cadastro</Text>
+        {/* Título */}
+        <Text style={styles.title}>Cadastro</Text>
 
-      {/* Campo de nome */}
-      <TextInput 
-        placeholder="Nome" 
-        placeholderTextColor="#888888"
-        style={styles.input} 
-        value={name} 
-        onChangeText={validateName} 
-      />
-      {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-
-      {/* Campo de e-mail */}
-      <TextInput 
-        placeholder="Email" 
-        placeholderTextColor="#888888"
-        style={styles.input} 
-        value={email} 
-        onChangeText={validateEmail} 
-        keyboardType="email-address"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-      {/* Campo de senha */}
-      <View style={styles.passwordContainer}>
-        <TextInput
-          placeholder="Crie sua senha"
+        {/* Campo de nome */}
+        <TextInput 
+          placeholder="Nome" 
           placeholderTextColor="#888888"
-          secureTextEntry={!passwordVisible}
-          style={styles.passwordInput}
-          value={password}
-          onChangeText={setPassword}
+          style={styles.input} 
+          value={name} 
+          onChangeText={validateName} 
         />
-        <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-          <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
-        </TouchableOpacity>
-      </View>
+        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
-      {/* Campo de confirmação de senha */}
-      <View style={styles.passwordContainer}>
-        <TextInput
-          placeholder="Confirme sua senha"
+        {/* Campo de e-mail */}
+        <TextInput 
+          placeholder="Email" 
           placeholderTextColor="#888888"
-          secureTextEntry={!confirmPasswordVisible}
-          style={styles.passwordInput}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          style={styles.input} 
+          value={email} 
+          onChangeText={validateEmail} 
+          keyboardType="email-address"
         />
-        <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>
-          <Ionicons name={confirmPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
-        </TouchableOpacity>
-      </View>
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-      {/* Seleção de usuário */}
-      <View style={styles.roleContainer}>
-        <TouchableOpacity
-          style={[styles.roleButton, selectedRole === 'Responsável' && styles.roleSelected]}
-          onPress={() => setSelectedRole('Responsável')}
-        >
-          <Text style={[styles.roleText, selectedRole === 'Responsável' && styles.roleTextSelected]}>
-            Responsável
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roleButton, selectedRole === 'Professor' && styles.roleSelected]}
-          onPress={() => setSelectedRole('Professor')}
-        >
-          <Text style={[styles.roleText, selectedRole === 'Professor' && styles.roleTextSelected]}>
-            Professor
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Aceitação de termos */}
-      <View style={styles.checkboxContainer}>
-        <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={styles.checkbox}>
-          <Ionicons
-            name={isChecked ? 'checkbox' : 'square-outline'}
-            size={24}
-            color={isChecked ? '#1B3C87' : '#666'}
+        {/* Campo de senha */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Crie sua senha"
+            placeholderTextColor="#888888"
+            secureTextEntry={!passwordVisible}
+            style={styles.passwordInput}
+            value={password}
+            onChangeText={setPassword}
           />
+          <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+            <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Campo de confirmação de senha */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Confirme sua senha"
+            placeholderTextColor="#888888"
+            secureTextEntry={!confirmPasswordVisible}
+            style={styles.passwordInput}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+          <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>
+            <Ionicons name={confirmPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Seleção de usuário */}
+        <View style={styles.roleContainer}>
+          <TouchableOpacity
+            style={[styles.roleButton, selectedRole === 'Responsável' && styles.roleSelected]}
+            onPress={() => setSelectedRole('Responsável')}
+          >
+            <Text style={[styles.roleText, selectedRole === 'Responsável' && styles.roleTextSelected]}>
+              Responsável
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.roleButton, selectedRole === 'Professor' && styles.roleSelected]}
+            onPress={() => setSelectedRole('Professor')}
+          >
+            <Text style={[styles.roleText, selectedRole === 'Professor' && styles.roleTextSelected]}>
+              Professor
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Aceitação de termos */}
+        <View style={styles.checkboxContainer}>
+          <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={styles.checkbox}>
+            <Ionicons
+              name={isChecked ? 'checkbox' : 'square-outline'}
+              size={24}
+              color={isChecked ? '#1B3C87' : '#666'}
+            />
+          </TouchableOpacity>
+          <Text style={styles.checkboxLabel}>Aceito os termos e condições de uso</Text>
+        </View>
+
+        {/* Botão de continuar */}
+        <TouchableOpacity 
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+          disabled={!isFormValid()}
+          onPress={() => router.push('/login')}
+        >
+          <Text style={styles.primaryButtonText}>Continuar</Text>
         </TouchableOpacity>
-        <Text style={styles.checkboxLabel}>Aceito os termos e condições de uso</Text>
+
+        {/* Link de login */}
+        <TouchableOpacity onPress={() => router.push('/login')}>
+          <Text style={styles.loginLink}>Já possui uma conta? Clique aqui para entrar</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Botão de continuar */}
-      <TouchableOpacity 
-        style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
-        disabled={!isFormValid()}
-        onPress={() => router.push('/login')}
-      >
-        <Text style={styles.primaryButtonText}>Continuar</Text>
-      </TouchableOpacity>
-
-      {/* Link de login */}
-      <TouchableOpacity onPress={() => router.push('/login')}>
-        <Text style={styles.loginLink}>Já possui uma conta? Clique aqui para entrar</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
