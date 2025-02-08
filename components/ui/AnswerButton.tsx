@@ -16,7 +16,7 @@ export default function AnswerButton({ label, onPress, style }: AnswerButtonProp
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#388E3C',
+    backgroundColor: '#1B3C87',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

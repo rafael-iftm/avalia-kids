@@ -19,7 +19,10 @@ export default function QuizScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: 'Avaliação' });
+    navigation.setOptions({
+      title: 'Avaliação',
+      headerBackVisible: false,
+    });
   }, [navigation]);
 
   const question = quizData[currentQuestionIndex];
@@ -110,5 +113,6 @@ const styles = StyleSheet.create({
   },
   incorrectButton: {
     backgroundColor: '#B0BEC5',
+    opacity: 0.4
   },
 });
