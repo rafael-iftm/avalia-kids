@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     padding: 20,
+    justifyContent: 'center',
   },
   backButton: {
     position: 'absolute',
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginVertical: 60,
+    marginBottom: 40,
   },
   input: {
     height: 50,
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F9F9',
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginBottom: 10,
+    marginBottom: 12,
     fontSize: 16,
   },
   errorText: {
@@ -213,6 +214,26 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     fontSize: 16,
+  },
+  primaryButton: {
+    backgroundColor: '#1B3C87',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  buttonDisabled: {
+    backgroundColor: '#A0AEC0',
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loginLink: {
+    color: '#1B3C87',
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   roleContainer: {
     flexDirection: 'row',
@@ -250,25 +271,5 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     color: '#666',
     fontSize: 14,
-  },
-  primaryButton: {
-    backgroundColor: '#1B3C87',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonDisabled: {
-    backgroundColor: '#A0AEC0',
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  loginLink: {
-    color: '#1B3C87',
-    textAlign: 'center',
-    textDecorationLine: 'underline',
   },
 });
