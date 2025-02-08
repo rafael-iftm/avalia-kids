@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 
@@ -9,25 +8,36 @@ export default function HomeScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: 'Início' });
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   return (
     <View style={styles.container}>
-      {/* Logo ou imagem de destaque */}
+      {/* Imagem do logo */}
       <Image
-        source={require('../../assets/images/mascote.png')}
+        source={require('../../assets/images/logo.png')}
         style={styles.logo}
       />
 
-      {/* Título do App */}
+      {/* Título */}
       <Text style={styles.title}>Bem-vindo ao Avalia Kids!</Text>
-      <Text style={styles.subtitle}>Pronto para testar seus conhecimentos de forma divertida?</Text>
 
-      {/* Botão principal */}
-      <TouchableOpacity style={styles.startButton} onPress={() => router.replace('/quiz')}>
-        <Ionicons name="play-circle" size={24} color="#fff" style={styles.icon} />
-        <Text style={styles.startButtonText}>Começar Avaliação</Text>
+      {/* Mascote */}
+      <Image
+        source={require('../../assets/images/mascote.png')}
+        style={styles.mascot}
+      />
+
+      {/* Subtítulo */}
+      <Text style={styles.subtitle}>Avalie seu conhecimento de uma forma muito divertida</Text>
+
+      {/* Botões */}
+      <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/login')}>
+        <Text style={styles.primaryButtonText}>Iniciar sessão</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.push('/register')}>
+        <Text style={styles.secondaryButtonText}>Cadastre-se aqui</Text>
       </TouchableOpacity>
     </View>
   );
@@ -38,20 +48,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     padding: 20,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 130,
     marginBottom: 20,
+    resizeMode: 'contain',
+  },
+  mascot: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+    resizeMode: 'contain',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
@@ -59,26 +76,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
   },
-  startButton: {
-    flexDirection: 'row',
-    backgroundColor: '#4CAF50',
+  primaryButton: {
+    backgroundColor: '#1B3C87',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 3,
+    minWidth: 200, // Largura mínima para manter o tamanho dos botões consistente
+    alignItems: 'center', // Centraliza o texto
+    marginBottom: 10,
   },
-  startButtonText: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: '600',
-    marginLeft: 10,
+  primaryButtonText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
-  icon: {
-    marginRight: 5,
+  secondaryButton: {
+    borderColor: '#1B3C87',
+    borderWidth: 2,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    minWidth: 200, // Largura mínima igual ao botão de cima
+    alignItems: 'center', // Centraliza o texto
+  },
+  secondaryButtonText: {
+    fontSize: 16,
+    color: '#1B3C87',
+    fontWeight: 'bold',
   },
 });
