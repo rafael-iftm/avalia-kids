@@ -32,20 +32,26 @@ export default function QuizScreen() {
 
     if (option === question.correct) {
       setShowConfetti(true);
-      setTimeout(() => {
-        setShowConfetti(false);
-        if (currentQuestionIndex < totalQuestions - 1) {
-          setCurrentQuestionIndex(currentQuestionIndex + 1);
-          setSelectedAnswer(null);
-          setDisabledOptions([]);
-        } else {
-          router.replace('/result');
-        }
-      }, 1500);
     } else {
       setDisabledOptions([...disabledOptions, option]);
     }
-  };
+  
+    if (option === question.correct) {
+      setShowConfetti(true);
+      setTimeout(() => {
+        if (option === question.correct) {
+          setShowConfetti(false);
+          if (currentQuestionIndex < totalQuestions - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setSelectedAnswer(null);
+            setDisabledOptions([]);
+          } else {
+            router.replace('/result');
+          }
+        }
+      }, 1500);
+    };
+};
 
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
@@ -75,9 +81,9 @@ export default function QuizScreen() {
           label={option}
           onPress={() => !disabledOptions.includes(option) && handleAnswerPress(option)}
           style={
-            disabledOptions.includes(option)
-              ? styles.incorrectButton
-              : selectedAnswer === option && option !== question.correct
+            selectedAnswer === option && option === question.correct
+              ? styles.correctButton
+              : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correct)
               ? styles.incorrectButton
               : {}
           }
@@ -111,8 +117,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 10,
   },
+  correctButton: {
+    backgroundColor: '#4CAF50',
+  },
   incorrectButton: {
     backgroundColor: '#B0BEC5',
-    opacity: 0.4
+    opacity: 0.4,
   },
 });
