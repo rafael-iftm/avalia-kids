@@ -9,8 +9,8 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import HeaderBar from '../../components/ui/HeaderBar';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -53,21 +53,13 @@ export default function StudentRegistrationScreen() {
   const confirmRegistration = () => {
     console.log('Aluno confirmado:', { studentName, birthDate });
     setModalVisible(false);
-    router.push('/studentManagement');
+    router.push('/home');
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        {/* Header com os ícones */}
-        <View style={styles.header}>
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={24} color="#000" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/login')}>
-            <Ionicons name="log-out-outline" size={24} color="#000" />
-          </TouchableOpacity>
-        </View>
+        <HeaderBar />
 
         {/* Conteúdo principal */}
         <View style={styles.content}>
@@ -119,17 +111,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 40,
-    marginBottom: 20,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   greeting: {
     fontSize: 28,

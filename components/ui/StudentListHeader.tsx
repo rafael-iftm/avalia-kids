@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 interface Props {
   studentsCount: number;
@@ -19,13 +20,16 @@ export default function StudentListHeader({
   sortBy,
   onNewStudentPress,
 }: Props) {
+
+  const router = useRouter();
+
   return (
     <>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/home')}>
           <Ionicons name="arrow-back-outline" size={24} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/login')}>
           <Ionicons name="log-out-outline" size={24} color="#000" />
         </TouchableOpacity>
       </View>
