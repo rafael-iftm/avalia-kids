@@ -141,6 +141,21 @@ export default function StudentManagementScreen() {
     </>
   );
 
+  const handleBirthDateChange = (text: string) => {
+    let cleanText = text.replace(/\D/g, '');
+    if (cleanText.length > 8) cleanText = cleanText.slice(0, 8);
+  
+    let formattedDate = cleanText;
+    if (cleanText.length > 2) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2);
+    }
+    if (cleanText.length > 4) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2, 4) + '/' + cleanText.slice(4);
+    }
+  
+    setNewStudentBirthDate(formattedDate);
+  };
+
   return (
     <>
       <FlatList
@@ -155,7 +170,6 @@ export default function StudentManagementScreen() {
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Seta de voltar no modal */}
             <TouchableOpacity style={styles.backButton} onPress={() => setModalVisible(false)}>
               <Ionicons name="arrow-back-outline" size={24} color="#000" />
             </TouchableOpacity>
@@ -170,11 +184,12 @@ export default function StudentManagementScreen() {
             />
             <TextInput
               style={styles.modalInput}
-              placeholder="Data de Nascimento"
+              placeholder="Data de Nascimento (DD/MM/AAAA)"
               placeholderTextColor="#A0A0A0"
               value={newStudentBirthDate}
-              onChangeText={setNewStudentBirthDate}
+              onChangeText={handleBirthDateChange}
               keyboardType="numeric"
+              maxLength={10}
             />
             <TouchableOpacity
               style={styles.primaryButton}
@@ -197,7 +212,13 @@ export default function StudentManagementScreen() {
             <Text style={styles.modalText}>Nome: {newStudentName}</Text>
             <Text style={styles.modalText}>Data de nascimento: {newStudentBirthDate}</Text>
             <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setConfirmationVisible(false)}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setConfirmationVisible(false);
+                  setModalVisible(true);
+                }}
+              >
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.confirmButton} onPress={handleAddStudent}>
@@ -210,6 +231,7 @@ export default function StudentManagementScreen() {
     </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
