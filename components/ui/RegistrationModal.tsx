@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 interface RegistrationModalProps {
   visible: boolean;
@@ -11,7 +11,54 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
 
+  // Máscara para o nome (somente letras, acentos e espaços)
+  const handleNameChange = (text: string) => {
+    const regex = /^[A-Za-zÀ-ÿ\s]*$/;
+    if (regex.test(text)) {
+      setName(text);
+    }
+  };
+
+  // Máscara para a data de nascimento no formato (DD/MM/AAAA)
+  const handleBirthDateChange = (text: string) => {
+    let cleanText = text.replace(/\D/g, '');
+    if (cleanText.length > 8) cleanText = cleanText.slice(0, 8);
+
+    let formattedDate = cleanText;
+    if (cleanText.length > 2) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2);
+    }
+    if (cleanText.length > 4) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2, 4) + '/' + cleanText.slice(4);
+    }
+
+    setBirthDate(formattedDate);
+  };
+
+  // Verifica se os campos estão preenchidos corretamente
+  const isFormValid = () => {
+    return name.trim() !== '' && isValidBirthDate(birthDate);
+  };
+
+  // Função para verificar se a data é válida e não está no futuro
+  const isValidBirthDate = (date: string): boolean => {
+    const [day, month, year] = date.split('/').map(Number);
+    const today = new Date();
+
+    if (!day || !month || !year || day > 31 || month > 12 || year < 1900) {
+      return false;
+    }
+
+    const birthDate = new Date(year, month - 1, day);
+    return birthDate <= today && birthDate.toString() !== 'Invalid Date';
+  };
+
   const handleSubmit = () => {
+    if (!isValidBirthDate(birthDate)) {
+      Alert.alert('Data inválida', 'A data de nascimento não pode ser futura ou inválida.');
+      return;
+    }
+
     onSubmit(name, birthDate);
     setName('');
     setBirthDate('');
@@ -24,22 +71,33 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
           <Text style={styles.modalTitle}>Cadastrar Aluno</Text>
           <TextInput
             placeholder="Nome completo"
+            placeholderTextColor="#A0A0A0"
             value={name}
-            onChangeText={setName}
+            onChangeText={handleNameChange}
             style={styles.input}
           />
           <TextInput
             placeholder="Data de nascimento (DD/MM/AAAA)"
+            placeholderTextColor="#A0A0A0"
             value={birthDate}
-            onChangeText={setBirthDate}
+            onChangeText={handleBirthDateChange}
             style={styles.input}
+            keyboardType="numeric"
+            maxLength={10}
           />
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Confirmar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </TouchableOpacity>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
+              <Text style={styles.cancelButtonText}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, !isFormValid() && styles.buttonDisabled]}
+              onPress={handleSubmit}
+              disabled={!isFormValid()}
+            >
+              <Text style={styles.buttonText}>Confirmar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -63,6 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
     borderColor: '#ccc',
@@ -70,24 +129,38 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     borderRadius: 5,
+    backgroundColor: '#F9F9F9',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  cancelButton: {
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    backgroundColor: '#E0E0E0',
+    flex: 1,
+    marginRight: 5,
+  },
+  cancelButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
   },
   button: {
     backgroundColor: '#1B3C87',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    flex: 1,
+    marginLeft: 5,
+  },
+  buttonDisabled: {
+    backgroundColor: '#A0AEC0',
   },
   buttonText: {
     color: '#FFF',
     fontWeight: 'bold',
-  },
-  cancelButton: {
-    marginTop: 10,
-    padding: 10,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#333',
   },
 });
 
