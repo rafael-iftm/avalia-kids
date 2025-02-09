@@ -176,11 +176,15 @@ export default function StudentManagementScreen() {
 
             <Text style={styles.modalTitle}>Cadastrar aluno</Text>
             <TextInput
-              style={styles.modalInput}
-              placeholder="Nome completo do aluno"
-              placeholderTextColor="#A0A0A0"
-              value={newStudentName}
-              onChangeText={setNewStudentName}
+                style={styles.modalInput}
+                placeholder="Nome completo do aluno"
+                placeholderTextColor="#A0A0A0"
+                value={newStudentName}
+                onChangeText={(text) => {
+                    if (/^[A-Za-zÀ-ÿ\s]*$/.test(text)) {
+                    setNewStudentName(text);
+                    }
+                }}
             />
             <TextInput
               style={styles.modalInput}
