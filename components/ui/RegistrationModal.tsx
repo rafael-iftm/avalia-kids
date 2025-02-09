@@ -95,7 +95,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
               onPress={handleSubmit}
               disabled={!isFormValid()}
             >
-              <Text style={styles.buttonText}>Confirmar</Text>
+              <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>
           </View>
         </View>

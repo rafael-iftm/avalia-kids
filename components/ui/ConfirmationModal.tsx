@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -21,8 +21,24 @@ export default function ConfirmationModal({
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Confirmar Cadastro</Text>
-          <Text style={styles.modalText}>Nome: {newStudentName}</Text>
-          <Text style={styles.modalText}>Data de nascimento: {newStudentBirthDate}</Text>
+
+          {/* Campo não editável para o nome */}
+          <Text style={styles.label}>Nome completo</Text>
+          <TextInput
+            value={newStudentName}
+            style={[styles.input, styles.disabledInput]}
+            editable={false}
+          />
+
+          {/* Campo não editável para a data de nascimento */}
+          <Text style={styles.label}>Data de nascimento</Text>
+          <TextInput
+            value={newStudentBirthDate}
+            style={[styles.input, styles.disabledInput]}
+            editable={false}
+          />
+
+          {/* Botões de ação */}
           <View style={styles.modalButtons}>
             <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
               <Text style={styles.cancelButtonText}>Cancelar</Text>
@@ -53,32 +69,52 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 25,
+    marginBottom: 20,
     textAlign: 'center',
   },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 10,
+  label: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
+  input: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#F9F9F9',
+    marginBottom: 15,
+  },
+  disabledInput: {
+    backgroundColor: '#E9ECEF', // cor de fundo para indicar campo desativado
+    color: '#6C757D', // texto mais claro para diferenciar
   },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
   },
   cancelButton: {
     backgroundColor: '#E0E0E0',
     padding: 10,
     borderRadius: 8,
+    flex: 1,
+    marginRight: 5,
   },
   cancelButtonText: {
-    color: '#000',
+    color: '#333',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   confirmButton: {
     backgroundColor: '#1B3C87',
     padding: 10,
     borderRadius: 8,
+    flex: 1,
+    marginLeft: 5,
   },
   confirmButtonText: {
     color: '#FFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
