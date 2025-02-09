@@ -22,23 +22,14 @@ export default function ConfirmationModal({
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Confirmar Cadastro</Text>
 
-          {/* Campo não editável para o nome */}
+          {/* Campos preenchidos não editáveis */}
           <Text style={styles.label}>Nome completo</Text>
-          <TextInput
-            value={newStudentName}
-            style={[styles.input, styles.disabledInput]}
-            editable={false}
-          />
+          <TextInput value={newStudentName} style={[styles.input, styles.disabledInput]} editable={false} />
 
-          {/* Campo não editável para a data de nascimento */}
           <Text style={styles.label}>Data de nascimento</Text>
-          <TextInput
-            value={newStudentBirthDate}
-            style={[styles.input, styles.disabledInput]}
-            editable={false}
-          />
+          <TextInput value={newStudentBirthDate} style={[styles.input, styles.disabledInput]} editable={false} />
 
-          {/* Botões de ação */}
+          {/* Botões */}
           <View style={styles.modalButtons}>
             <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
               <Text style={styles.cancelButtonText}>Cancelar</Text>

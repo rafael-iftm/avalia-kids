@@ -14,6 +14,8 @@ import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
+import { validateName, validateBirthDate } from '../../utils/validation';
+import { formatBirthDate, areFieldsValid } from '../../utils/form';
 
 export default function StudentRegistrationScreen() {
   const [studentName, setStudentName] = useState('');
@@ -26,57 +28,18 @@ export default function StudentRegistrationScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  // Valida o nome para aceitar apenas letras, acentos e espaços
   const handleNameChange = (text: string) => {
-    if (/^[A-Za-zÀ-ÿ\s]*$/.test(text)) {
+    if (validateName(text)) {
       setStudentName(text);
     }
   };
 
-  // Função para mascarar a data e validar no formato DD/MM/AAAA
   const handleBirthDateChange = (text: string) => {
-    let cleanText = text.replace(/\D/g, ''); // Remove qualquer caractere não numérico
-
-    if (cleanText.length > 8) cleanText = cleanText.slice(0, 8); // Limita a 8 números (DDMMAAAA)
-
-    let formattedDate = cleanText;
-    if (cleanText.length > 2) {
-      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2);
-    }
-    if (cleanText.length > 4) {
-      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2, 4) + '/' + cleanText.slice(4);
-    }
-
-    setBirthDate(formattedDate);
+    setBirthDate(formatBirthDate(text));
   };
 
-  // Verifica se a data de nascimento é válida
-  const isValidBirthDate = (date: string) => {
-    if (date.length !== 10) return false;
-
-    const [day, month, year] = date.split('/').map(Number);
-    const today = new Date();
-    const enteredDate = new Date(year, month - 1, day);
-
-    if (
-      !day ||
-      !month ||
-      !year ||
-      month < 1 ||
-      month > 12 ||
-      day < 1 ||
-      day > 31 ||
-      enteredDate > today ||
-      year < 1900
-    ) {
-      return false;
-    }
-    return enteredDate.getDate() === day && enteredDate.getMonth() === month - 1;
-  };
-
-  // Verifica se o formulário está válido
   const isFormValid = () => {
-    return studentName.trim() !== '' && isValidBirthDate(birthDate);
+    return areFieldsValid([studentName.trim() !== '', validateBirthDate(birthDate)]);
   };
 
   const handleRegisterStudent = () => {
