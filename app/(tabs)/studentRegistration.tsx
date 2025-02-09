@@ -27,7 +27,7 @@ export default function StudentRegistrationScreen() {
   const confirmRegistration = () => {
     console.log('Aluno confirmado:', { studentName, birthDate });
     setModalVisible(false);
-    router.push('/quiz');
+    router.push('/studentManagement');
   };
 
   // Função para mascarar a data de nascimento no formato DD/MM/AAAA
