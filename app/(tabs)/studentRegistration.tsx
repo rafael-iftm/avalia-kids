@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import ConfirmationModal from '../../components/ui/ConfirmationModal';
 
 export default function StudentRegistrationScreen() {
   const [studentName, setStudentName] = useState('');
@@ -16,21 +26,14 @@ export default function StudentRegistrationScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const isFormValid = () => {
-    return studentName.trim() !== '' && birthDate.trim().length === 10;
+  // Valida o nome para aceitar apenas letras, acentos e espaços
+  const handleNameChange = (text: string) => {
+    if (/^[A-Za-zÀ-ÿ\s]*$/.test(text)) {
+      setStudentName(text);
+    }
   };
 
-  const handleRegisterStudent = () => {
-    setModalVisible(true);
-  };
-
-  const confirmRegistration = () => {
-    console.log('Aluno confirmado:', { studentName, birthDate });
-    setModalVisible(false);
-    router.push('/studentManagement');
-  };
-
-  // Função para mascarar a data de nascimento no formato DD/MM/AAAA
+  // Função para mascarar a data e validar no formato DD/MM/AAAA
   const handleBirthDateChange = (text: string) => {
     let cleanText = text.replace(/\D/g, ''); // Remove qualquer caractere não numérico
 
@@ -45,6 +48,49 @@ export default function StudentRegistrationScreen() {
     }
 
     setBirthDate(formattedDate);
+  };
+
+  // Verifica se a data de nascimento é válida
+  const isValidBirthDate = (date: string) => {
+    if (date.length !== 10) return false;
+
+    const [day, month, year] = date.split('/').map(Number);
+    const today = new Date();
+    const enteredDate = new Date(year, month - 1, day);
+
+    if (
+      !day ||
+      !month ||
+      !year ||
+      month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > 31 ||
+      enteredDate > today ||
+      year < 1900
+    ) {
+      return false;
+    }
+    return enteredDate.getDate() === day && enteredDate.getMonth() === month - 1;
+  };
+
+  // Verifica se o formulário está válido
+  const isFormValid = () => {
+    return studentName.trim() !== '' && isValidBirthDate(birthDate);
+  };
+
+  const handleRegisterStudent = () => {
+    if (!isFormValid()) {
+      Alert.alert('Erro', 'Por favor, insira um nome válido e uma data de nascimento válida.');
+      return;
+    }
+    setModalVisible(true);
+  };
+
+  const confirmRegistration = () => {
+    console.log('Aluno confirmado:', { studentName, birthDate });
+    setModalVisible(false);
+    router.push('/studentManagement');
   };
 
   return (
@@ -72,7 +118,7 @@ export default function StudentRegistrationScreen() {
             placeholderTextColor="#888"
             style={styles.input}
             value={studentName}
-            onChangeText={setStudentName}
+            onChangeText={handleNameChange}
           />
           <TextInput
             placeholder="Data de Nascimento (DD/MM/AAAA)"
@@ -81,7 +127,7 @@ export default function StudentRegistrationScreen() {
             value={birthDate}
             onChangeText={handleBirthDateChange}
             keyboardType="numeric"
-            maxLength={10} // Impede que o usuário digite mais de 10 caracteres
+            maxLength={10}
           />
 
           <TouchableOpacity
@@ -94,30 +140,13 @@ export default function StudentRegistrationScreen() {
         </View>
 
         {/* Modal de confirmação */}
-        <Modal
+        <ConfirmationModal
           visible={isModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalBackground}>
-            <View style={styles.modalContainer}>
-              {/* Botão de voltar no canto superior esquerdo */}
-              <TouchableOpacity style={styles.modalBackButton} onPress={() => setModalVisible(false)}>
-                <Ionicons name="arrow-back-outline" size={24} color="#000" />
-              </TouchableOpacity>
-
-              <Text style={styles.modalTitle}>Confirmar Cadastro</Text>
-              <Text style={styles.modalText}>Nome: {studentName}</Text>
-              <Text style={styles.modalText}>Data de Nascimento: {birthDate}</Text>
-
-              {/* Botão confirmar centralizado */}
-              <TouchableOpacity style={styles.confirmButton} onPress={confirmRegistration}>
-                <Text style={styles.confirmButtonText}>Confirmar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+          newStudentName={studentName}
+          newStudentBirthDate={birthDate}
+          onCancel={() => setModalVisible(false)}
+          onConfirm={confirmRegistration}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -172,48 +201,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#A0AEC0',
   },
   primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContainer: {
-    width: '80%',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  modalBackButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 30,
-    marginBottom: 20,
-  },
-  modalText: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 10,
-  },
-  confirmButton: {
-    backgroundColor: '#1B3C87',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  confirmButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
