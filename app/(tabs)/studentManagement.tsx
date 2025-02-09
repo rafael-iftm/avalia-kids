@@ -106,7 +106,7 @@ export default function StudentManagementScreen() {
         </View>
         <TouchableOpacity style={styles.sortButton} onPress={toggleSort}>
           <Text numberOfLines={1} ellipsizeMode="tail" style={styles.sortButtonText}>
-            Ordenar por: {sortBy === 'alfabetica' ? 'Alfabética' : 'Turma'}
+            Ordenar: {sortBy === 'alfabetica' ? 'Alfabética' : 'Turma'}
           </Text>
           <Ionicons name="chevron-down-outline" size={16} color="#000" />
         </TouchableOpacity>
