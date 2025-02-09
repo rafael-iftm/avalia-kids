@@ -17,7 +17,7 @@ export default function StudentRegistrationScreen() {
   }, [navigation]);
 
   const isFormValid = () => {
-    return studentName.trim() !== '' && birthDate.trim() !== '';
+    return studentName.trim() !== '' && birthDate.trim().length === 10;
   };
 
   const handleRegisterStudent = () => {
@@ -28,6 +28,23 @@ export default function StudentRegistrationScreen() {
     console.log('Aluno confirmado:', { studentName, birthDate });
     setModalVisible(false);
     router.push('/quiz');
+  };
+
+  // Função para mascarar a data de nascimento no formato DD/MM/AAAA
+  const handleBirthDateChange = (text: string) => {
+    let cleanText = text.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+
+    if (cleanText.length > 8) cleanText = cleanText.slice(0, 8); // Limita a 8 números (DDMMAAAA)
+
+    let formattedDate = cleanText;
+    if (cleanText.length > 2) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2);
+    }
+    if (cleanText.length > 4) {
+      formattedDate = cleanText.slice(0, 2) + '/' + cleanText.slice(2, 4) + '/' + cleanText.slice(4);
+    }
+
+    setBirthDate(formattedDate);
   };
 
   return (
@@ -58,12 +75,13 @@ export default function StudentRegistrationScreen() {
             onChangeText={setStudentName}
           />
           <TextInput
-            placeholder="Data de Nascimento"
+            placeholder="Data de Nascimento (DD/MM/AAAA)"
             placeholderTextColor="#888"
             style={styles.input}
             value={birthDate}
-            onChangeText={setBirthDate}
+            onChangeText={handleBirthDateChange}
             keyboardType="numeric"
+            maxLength={10} // Impede que o usuário digite mais de 10 caracteres
           />
 
           <TouchableOpacity
@@ -84,27 +102,19 @@ export default function StudentRegistrationScreen() {
         >
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
+              {/* Botão de voltar no canto superior esquerdo */}
+              <TouchableOpacity style={styles.modalBackButton} onPress={() => setModalVisible(false)}>
+                <Ionicons name="arrow-back-outline" size={24} color="#000" />
+              </TouchableOpacity>
+
               <Text style={styles.modalTitle}>Confirmar Cadastro</Text>
               <Text style={styles.modalText}>Nome: {studentName}</Text>
               <Text style={styles.modalText}>Data de Nascimento: {birthDate}</Text>
 
-              <View style={styles.modalButtonsContainer}>
-                {/* Botão de voltar */}
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Ionicons name="arrow-back-outline" size={24} color="#FFFFFF" />
-                </TouchableOpacity>
-
-                {/* Botão de confirmar */}
-                <TouchableOpacity
-                  style={styles.confirmButton}
-                  onPress={confirmRegistration}
-                >
-                  <Text style={styles.confirmButtonText}>Confirmar</Text>
-                </TouchableOpacity>
-              </View>
+              {/* Botão confirmar centralizado */}
+              <TouchableOpacity style={styles.confirmButton} onPress={confirmRegistration}>
+                <Text style={styles.confirmButtonText}>Confirmar</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
@@ -134,14 +144,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
-    marginTop: -200
+    marginTop: -200,
   },
   instructions: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
-    marginTop: 20
   },
   input: {
     height: 50,
@@ -179,32 +188,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     alignItems: 'center',
+    position: 'relative',
+  },
+  modalBackButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginTop: 30,
+    marginBottom: 20,
   },
   modalText: {
     fontSize: 16,
     color: '#666',
     marginBottom: 10,
   },
-  modalButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 20,
-  },
-  backButton: {
-    backgroundColor: '#B0BEC5',
-    padding: 10,
-    borderRadius: 8,
-  },
   confirmButton: {
     backgroundColor: '#1B3C87',
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
     borderRadius: 8,
+    marginTop: 20,
   },
   confirmButtonText: {
     color: '#FFFFFF',
