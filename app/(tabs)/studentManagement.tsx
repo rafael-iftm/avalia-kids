@@ -11,10 +11,12 @@ import { sortStudents, searchStudents } from '../../utils/sortAndSearch';
 import { studentsData } from '../../data/studentsData';
 import { Student } from '../../types/Student';
 
+type SortBy = 'alfabetica' | 'turma';
+
 export default function StudentManagementScreen() {
   const [students, setStudents] = useState<Student[]>(studentsData);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('alfabetica');
+  const [sortBy, setSortBy] = useState<SortBy>('alfabetica');
   const [isModalVisible, setModalVisible] = useState(false);
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
   const [newStudentName, setNewStudentName] = useState('');
@@ -47,7 +49,7 @@ export default function StudentManagementScreen() {
   };
 
   const toggleSort = () => {
-    const newSortBy = sortBy === 'alfabetica' ? 'turma' : 'alfabetica';
+    const newSortBy: SortBy = sortBy === 'alfabetica' ? 'turma' : 'alfabetica';
     setSortBy(newSortBy);
     setStudents(sortStudents(students, newSortBy));
   };
