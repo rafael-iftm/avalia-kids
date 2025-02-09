@@ -29,10 +29,10 @@ export default function StudentRegistrationScreen() {
   }, [navigation]);
 
   const handleNameChange = (text: string) => {
-    if (validateName(text)) {
+    if (text === '' || validateName(text)) {
       setStudentName(text);
     }
-  };
+  };  
 
   const handleBirthDateChange = (text: string) => {
     setBirthDate(formatBirthDate(text));

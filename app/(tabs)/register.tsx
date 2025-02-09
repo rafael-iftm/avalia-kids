@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import { validateEmail, validatePassword } from '../../utils/validation';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -15,8 +16,8 @@ export default function RegisterScreen() {
   const [isChecked, setIsChecked] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Responsável');
 
-  const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -25,39 +26,49 @@ export default function RegisterScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const isFormValid = () => {
-    return (
-      name.trim() !== '' &&
-      email.trim() !== '' &&
-      password.trim() !== '' &&
-      confirmPassword.trim() !== '' &&
-      password === confirmPassword &&
-      isChecked &&
-      nameError === '' &&
-      emailError === ''
-    );
+  const handleNameChange = (value: string) => {
+    const cleanedValue = value.replace(/[^A-Za-zÀ-ÿ\s~]/g, '');
+    setName(cleanedValue);
   };
 
-  const validateName = (value: string) => {
-    const nameRegex = /^[A-Za-zÀ-ú\s~]+$/;
-    if (!nameRegex.test(value)) {
-      setNameError('Nome só pode conter letras, acentos, espaços e til.');
-    } else {
-      setNameError('');
-    }
-    setName(value);
-  };
-  
-  const validateEmail = (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (!validateEmail(value)) {
       setEmailError('Insira um e-mail válido.');
     } else {
       setEmailError('');
     }
-    setEmail(value);
   };
-  
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (confirmPassword !== '' && !validatePassword(value, confirmPassword)) {
+      setPasswordError('As senhas não coincidem.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
+    if (password !== '' && !validatePassword(password, value)) {
+      setPasswordError('As senhas não coincidem.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  const isFormValid = () => {
+    return (
+      name.trim() !== '' &&
+      validateEmail(email) &&
+      password.trim() !== '' &&
+      confirmPassword.trim() !== '' &&
+      validatePassword(password, confirmPassword) &&
+      isChecked
+    );
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -70,22 +81,21 @@ export default function RegisterScreen() {
         <Text style={styles.title}>Cadastro</Text>
 
         {/* Campo de nome */}
-        <TextInput 
-          placeholder="Nome" 
+        <TextInput
+          placeholder="Nome"
           placeholderTextColor="#888888"
-          style={styles.input} 
-          value={name} 
-          onChangeText={validateName} 
+          style={styles.input}
+          value={name}
+          onChangeText={handleNameChange}
         />
-        {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
         {/* Campo de e-mail */}
-        <TextInput 
-          placeholder="Email" 
+        <TextInput
+          placeholder="Email"
           placeholderTextColor="#888888"
-          style={styles.input} 
-          value={email} 
-          onChangeText={validateEmail} 
+          style={styles.input}
+          value={email}
+          onChangeText={handleEmailChange}
           keyboardType="email-address"
         />
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
@@ -98,7 +108,7 @@ export default function RegisterScreen() {
             secureTextEntry={!passwordVisible}
             style={styles.passwordInput}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={handlePasswordChange}
           />
           <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
             <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
@@ -113,12 +123,13 @@ export default function RegisterScreen() {
             secureTextEntry={!confirmPasswordVisible}
             style={styles.passwordInput}
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={handleConfirmPasswordChange}
           />
           <TouchableOpacity onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}>
             <Ionicons name={confirmPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
           </TouchableOpacity>
         </View>
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
         {/* Seleção de usuário */}
         <View style={styles.roleContainer}>
@@ -143,18 +154,14 @@ export default function RegisterScreen() {
         {/* Aceitação de termos */}
         <View style={styles.checkboxContainer}>
           <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={styles.checkbox}>
-            <Ionicons
-              name={isChecked ? 'checkbox' : 'square-outline'}
-              size={24}
-              color={isChecked ? '#1B3C87' : '#666'}
-            />
+            <Ionicons name={isChecked ? 'checkbox' : 'square-outline'} size={24} color={isChecked ? '#1B3C87' : '#666'} />
           </TouchableOpacity>
           <Text style={styles.checkboxLabel}>Aceito os termos e condições de uso</Text>
         </View>
 
         {/* Botão de continuar */}
-        <TouchableOpacity 
-          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+        <TouchableOpacity
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
           disabled={!isFormValid()}
           onPress={() => router.push('/login')}
         >

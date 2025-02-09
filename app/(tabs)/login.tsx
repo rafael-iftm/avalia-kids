@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import { validateEmail } from '../../utils/validation'; // Importando a validação de e-mail
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -18,18 +19,13 @@ export default function LoginScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const validateEmail = (value: string) => {
+  const handleEmailChange = (value: string) => {
     setEmail(value);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      setEmailError('Insira um e-mail válido.');
-    } else {
-      setEmailError('');
-    }
+    setEmailError(validateEmail(value) ? '' : 'Insira um e-mail válido.');
   };
 
   const isFormValid = () => {
-    return email.trim() !== '' && password.trim() !== '' && emailError === '';
+    return validateEmail(email) && password.trim() !== '';
   };
 
   return (
@@ -39,12 +35,12 @@ export default function LoginScreen() {
         <Text style={styles.title}>Entrar</Text>
 
         {/* Campo de e-mail */}
-        <TextInput 
-          placeholder="Email" 
+        <TextInput
+          placeholder="Email"
           placeholderTextColor="#888888"
-          style={styles.input} 
-          value={email} 
-          onChangeText={validateEmail} 
+          style={styles.input}
+          value={email}
+          onChangeText={handleEmailChange}
           keyboardType="email-address"
         />
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
@@ -65,8 +61,8 @@ export default function LoginScreen() {
         </View>
 
         {/* Botão de continuar */}
-        <TouchableOpacity 
-          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+        <TouchableOpacity
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
           disabled={!isFormValid()}
           onPress={() => router.push('/studentRegistration')}
         >
@@ -88,77 +84,71 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#FFFFFF',
-      padding: 20,
-      justifyContent: 'center',
-    },
-    backButton: {
-      position: 'absolute',
-      top: 40,
-      left: 20,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: 40,
-    },
-    input: {
-      height: 50,
-      borderWidth: 1,
-      borderColor: '#CCCCCC',
-      backgroundColor: '#F9F9F9',
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      marginBottom: 12,
-      fontSize: 16,
-    },
-    errorText: {
-      color: 'red',
-      fontSize: 14,
-      marginBottom: 10,
-    },
-    passwordContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: '#CCCCCC',
-      backgroundColor: '#F9F9F9',
-      borderRadius: 8,
-      paddingHorizontal: 15,
-      marginBottom: 15,
-    },
-    passwordInput: {
-      flex: 1,
-      height: 50,
-      fontSize: 16,
-    },
-    primaryButton: {
-      backgroundColor: '#1B3C87',
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginBottom: 15,
-    },
-    buttonDisabled: {
-      backgroundColor: '#A0AEC0',
-    },
-    primaryButtonText: {
-      color: '#FFFFFF',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    linksContainer: {
-      alignItems: 'center',
-      marginTop: 10,
-    },
-    linkText: {
-      color: '#1B3C87',
-      fontSize: 14,
-      textDecorationLine: 'underline',
-      marginBottom: 8,
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  input: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    backgroundColor: '#F9F9F9',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    backgroundColor: '#F9F9F9',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 16,
+  },
+  primaryButton: {
+    backgroundColor: '#1B3C87',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  buttonDisabled: {
+    backgroundColor: '#A0AEC0',
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  linksContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  linkText: {
+    color: '#1B3C87',
+    fontSize: 14,
+    textDecorationLine: 'underline',
+    marginBottom: 8,
+  },
+});
