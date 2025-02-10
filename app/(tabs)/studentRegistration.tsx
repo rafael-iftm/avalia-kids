@@ -10,12 +10,13 @@ import {
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import HeaderBar from '../../components/ui/HeaderBar';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import { validateName, validateBirthDate } from '../../utils/validation';
 import { formatBirthDate, areFieldsValid } from '../../utils/form';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 export default function StudentRegistrationScreen() {
   const [studentName, setStudentName] = useState('');
@@ -59,7 +60,10 @@ export default function StudentRegistrationScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <HeaderBar />
+        <CustomHeaderBar
+          leftIcon={{ name: 'settings-outline', route: routes.settings }}
+          rightIcon={{ name: 'log-out-outline', route: routes.login }}
+        />
 
         {/* Conteúdo principal */}
         <View style={styles.content}>

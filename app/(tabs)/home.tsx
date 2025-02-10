@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import HeaderBar from '../../components/ui/HeaderBar';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -15,7 +16,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderBar />
+      <CustomHeaderBar
+        title='Menu'
+        leftIcon={{ name: 'settings-outline', route: routes.settings }}
+        rightIcon={{ name: 'log-out-outline', route: routes.login }}
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.greeting}>Olá, {`{Nome}`}</Text>
@@ -40,7 +45,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={styles.menuButton}
-          onPress={() => router.push('/quiz')}
+          onPress={() => router.push('/evaluationStart')}
         >
           <Image
             source={require('../../assets/images/evaluation-icon.png')}
@@ -71,6 +76,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     marginBottom: 10,
+    marginTop: -200,
   },
   question: {
     fontSize: 18,

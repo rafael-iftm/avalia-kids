@@ -25,17 +25,6 @@ export default function StudentListHeader({
 
   return (
     <>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.push('/home')}>
-          <Ionicons name="arrow-back-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push('/login')}>
-          <Ionicons name="log-out-outline" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.screenTitle}>Alunos</Text>
-
       <View style={styles.summary}>
         <Ionicons name="people-circle-outline" size={60} color="#6FCF97" />
         <View style={styles.summaryText}>
@@ -82,17 +71,11 @@ const styles = StyleSheet.create({
     paddingTop: 55,
     marginBottom: 20,
   },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
   summary: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 20
   },
   summaryText: {
     marginLeft: 15,

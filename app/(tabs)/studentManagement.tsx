@@ -10,6 +10,8 @@ import StudentItem from '../../components/ui/StudentItem';
 import { sortStudents, searchStudents } from '../../utils/sortAndSearch';
 import { studentsData } from '../../data/studentsData';
 import { Student } from '../../types/Student';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 type SortBy = 'alfabetica' | 'turma';
 
@@ -56,6 +58,12 @@ export default function StudentManagementScreen() {
 
   return (
     <>
+      <CustomHeaderBar
+        title='Alunos'
+        leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
+        rightIcon={{ name: 'log-out-outline', route: routes.login }}
+      />
+
       <FlatList
         data={students}
         keyExtractor={(item) => item.id}

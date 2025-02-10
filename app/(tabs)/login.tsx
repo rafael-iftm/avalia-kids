@@ -4,7 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
-import { validateEmail } from '../../utils/validation'; // Importando a validação de e-mail
+import { validateEmail } from '../../utils/validation';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -31,6 +33,11 @@ export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
+        <CustomHeaderBar
+          leftIcon={{ name: 'arrow-back-outline', route: routes.index }}
+        />
+
+        <View style={styles.content}>
         {/* Título */}
         <Text style={styles.title}>Entrar</Text>
 
@@ -78,6 +85,7 @@ export default function LoginScreen() {
             <Text style={styles.linkText}>Esqueceu sua senha?</Text>
           </TouchableOpacity>
         </View>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -87,14 +95,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    padding: 20,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 40,
+    marginTop: -200,
   },
   input: {
     height: 50,

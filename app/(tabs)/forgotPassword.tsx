@@ -4,6 +4,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -15,7 +17,6 @@ export default function ForgotPasswordScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
-
 
   const validateInput = (value: string) => {
     setEmail(value);
@@ -34,36 +35,36 @@ export default function ForgotPasswordScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Ícone de voltar */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </TouchableOpacity>
-
-      {/* Título */}
-      <Text style={styles.title}>Recupere sua senha</Text>
-
-      {/* Campo de e-mail */}
-      <TextInput 
-        placeholder="Email" 
-        placeholderTextColor="#888888"
-        style={styles.input} 
-        value={email} 
-        onChangeText={validateInput} 
+      <CustomHeaderBar
+        leftIcon={{ name: 'arrow-back-outline', route: routes.index }}
       />
-      {inputError ? <Text style={styles.errorText}>{inputError}</Text> : null}
+      <View style={styles.content}>
+        {/* Título */}
+        <Text style={styles.title}>Recupere sua senha</Text>
 
-      {/* Botão de continuar */}
-      <TouchableOpacity 
-        style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
-        disabled={!isFormValid()}
-      >
-        <Text style={styles.primaryButtonText}>Continuar</Text>
-      </TouchableOpacity>
+        {/* Campo de e-mail */}
+        <TextInput 
+          placeholder="Email" 
+          placeholderTextColor="#888888"
+          style={styles.input} 
+          value={email} 
+          onChangeText={validateInput} 
+        />
+        {inputError ? <Text style={styles.errorText}>{inputError}</Text> : null}
 
-      {/* Link para registro */}
-      <TouchableOpacity onPress={() => router.push('/register')}>
-        <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
-      </TouchableOpacity>
+        {/* Botão de continuar */}
+        <TouchableOpacity 
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+          disabled={!isFormValid()}
+        >
+          <Text style={styles.primaryButtonText}>Continuar</Text>
+        </TouchableOpacity>
+
+        {/* Link para registro */}
+        <TouchableOpacity onPress={() => router.push('/register')}>
+          <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -72,8 +73,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    padding: 20,
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   backButton: {
     position: 'absolute',
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 30,
+    marginTop: -200,
   },
   input: {
     height: 50,

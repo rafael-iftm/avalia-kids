@@ -8,6 +8,8 @@ import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import ConfettiCannon from 'react-native-confetti-cannon';
+import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { routes } from '@/routes';
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -19,10 +21,7 @@ export default function QuizScreen() {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'Avaliação',
-      headerBackVisible: false,
-    });
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   const question = quizData[currentQuestionIndex];
@@ -46,7 +45,7 @@ export default function QuizScreen() {
             setSelectedAnswer(null);
             setDisabledOptions([]);
           } else {
-            router.replace('/result');
+            router.replace('/evaluationEnd');
           }
         }
       }, 1500);
@@ -57,49 +56,55 @@ export default function QuizScreen() {
 
   return (
     <View style={styles.container}>
+      <CustomHeaderBar
+        title="Avaliação"
+        leftIcon={{ name: 'arrow-back-outline', route: routes.welcome }}
+      />
+      <View style={styles.content}>
       {/* Header com o progresso */}
-      <Header
-        title={`Pergunta ${currentQuestionIndex + 1}`}
-        progress={progress}
-        currentQuestion={currentQuestionIndex + 1}
-        totalQuestions={totalQuestions}
-      />
-
-      {/* Imagem central associada à pergunta */}
-      <Image
-        source={question.image}
-        style={styles.image}
-      />
-
-      {/* Pergunta */}
-      <QuestionCard question={question.text} />
-
-      {/* Botões de Resposta */}
-      {question.options.map((option, index) => (
-        <AnswerButton
-          key={index}
-          label={option}
-          onPress={() => !disabledOptions.includes(option) && handleAnswerPress(option)}
-          style={
-            selectedAnswer === option && option === question.correct
-              ? styles.correctButton
-              : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correct)
-              ? styles.incorrectButton
-              : {}
-          }
+        <Header
+          title={`Pergunta ${currentQuestionIndex + 1}`}
+          progress={progress}
+          currentQuestion={currentQuestionIndex + 1}
+          totalQuestions={totalQuestions}
         />
-      ))}
 
-      {/* Animação de confetes */}
-      {showConfetti && (
-        <ConfettiCannon
-          count={200}
-          origin={{ x: 0, y: 0 }}
-          fadeOut={true}
-          explosionSpeed={500}
-          fallSpeed={1500}
+        {/* Imagem central associada à pergunta */}
+        <Image
+          source={question.image}
+          style={styles.image}
         />
-      )}
+
+        {/* Pergunta */}
+        <QuestionCard question={question.text} />
+
+        {/* Botões de Resposta */}
+        {question.options.map((option, index) => (
+          <AnswerButton
+            key={index}
+            label={option}
+            onPress={() => !disabledOptions.includes(option) && handleAnswerPress(option)}
+            style={
+              selectedAnswer === option && option === question.correct
+                ? styles.correctButton
+                : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correct)
+                ? styles.incorrectButton
+                : {}
+            }
+          />
+        ))}
+
+        {/* Animação de confetes */}
+        {showConfetti && (
+          <ConfettiCannon
+            count={200}
+            origin={{ x: 0, y: 0 }}
+            fadeOut={true}
+            explosionSpeed={500}
+            fallSpeed={1500}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -107,8 +112,12 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
-    padding: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   image: {
     width: 200,
