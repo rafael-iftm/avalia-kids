@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
   },
   incorrectButton: {
-    backgroundColor: '#B0BEC5',
+    backgroundColor: '#A0AEC0',
     opacity: 0.4,
   },
 });

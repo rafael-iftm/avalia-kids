@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
-import { validateEmail, validatePassword } from '../../utils/validation';
+import { validateEmail } from '../../utils/validation';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 
@@ -44,19 +44,19 @@ export default function RegisterScreen() {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    if (value === confirmPassword) {
-      setPasswordError('');
-    } else {
+    if (confirmPassword !== '' && value !== confirmPassword) {
       setPasswordError('As senhas não coincidem.');
+    } else {
+      setPasswordError('');
     }
   };
 
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
-    if (password === value) {
-      setPasswordError('');
-    } else {
+    if (password !== value) {
       setPasswordError('As senhas não coincidem.');
+    } else {
+      setPasswordError('');
     }
   };
 
@@ -66,7 +66,8 @@ export default function RegisterScreen() {
       validateEmail(email) &&
       password.trim() !== '' &&
       confirmPassword.trim() !== '' &&
-      validatePassword(password, confirmPassword) &&
+      password === confirmPassword &&
+      passwordError === '' &&
       isChecked
     );
   };
@@ -79,7 +80,6 @@ export default function RegisterScreen() {
         />
 
         <View style={styles.content}>
-          {/* Título */}
           <Text style={styles.title}>Cadastro</Text>
 
           {/* Campo de nome */}
@@ -190,17 +190,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 40,
-    marginTop: -100,
   },
   input: {
     height: 50,
