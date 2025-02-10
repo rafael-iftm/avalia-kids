@@ -26,13 +26,12 @@ export default function WelcomeScreen() {
       <CustomHeaderBar
         title="Avaliação"
         leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
-        rightIcon={{ name: 'log-out-outline', route: routes.login }}
       />
       {/* Conteúdo principal */}
       <View style={styles.content}>
         <Text style={styles.greeting}>Olá {`{Nome}`}</Text>
         <Image
-          source={require('../../assets/images/mascote.png')} // Altere o caminho para a imagem correta
+          source={require('../../assets/images/mascote.png')}
           style={styles.mascotImage}
           resizeMode="contain"
         />
