@@ -7,6 +7,8 @@ import { useLayoutEffect } from 'react';
 import { validateEmail } from '../../utils/validation';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { registerUser } from '@/services/authService';
+import { Alert } from 'react-native';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -71,6 +73,31 @@ export default function RegisterScreen() {
       isChecked
     );
   };
+
+  const handleRegister = async () => {
+    if (!validateEmail(email)) {
+      setEmailError('Please enter a valid email.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match.');
+      return;
+    }
+  
+    const role = selectedRole === 'Responsável' ? 'PARENT' : 'TEACHER';
+  
+    try {
+      await registerUser(name, email, password, role);
+      Alert.alert('Success', 'User registered successfully!');
+      router.push('/login');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Error', error.message || 'Failed to register the user.');
+      } else {
+        Alert.alert('Error', 'Unknown error.');
+      }
+    }
+  };  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -165,7 +192,7 @@ export default function RegisterScreen() {
           <TouchableOpacity
             style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
             disabled={!isFormValid()}
-            onPress={() => router.push('/login')}
+            onPress={handleRegister}
           >
             <Text style={styles.primaryButtonText}>Continuar</Text>
           </TouchableOpacity>
@@ -189,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginBottom: 80,
   },
   title: {
     fontSize: 28,

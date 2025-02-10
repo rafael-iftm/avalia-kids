@@ -7,6 +7,8 @@ import { useLayoutEffect } from 'react';
 import { validateEmail } from '../../utils/validation';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { loginUser } from '@/services/authService';
+import { Alert } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -28,6 +30,25 @@ export default function LoginScreen() {
 
   const isFormValid = () => {
     return validateEmail(email) && password.trim() !== '';
+  };
+
+  const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      setEmailError('Insira um e-mail válido.');
+      return;
+    }
+  
+    try {
+      await loginUser(email, password);
+      Alert.alert('Sucesso', 'Login bem-sucedido!');
+      router.push('/studentRegistration');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Erro', error.message || 'Credenciais inválidas.');
+      } else {
+        Alert.alert('Erro', 'Erro desconhecido.');
+      }
+    }
   };
 
   return (
@@ -71,7 +92,7 @@ export default function LoginScreen() {
         <TouchableOpacity
           style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
           disabled={!isFormValid()}
-          onPress={() => router.push('/studentRegistration')}
+          onPress={handleLogin}
         >
           <Text style={styles.primaryButtonText}>Continuar</Text>
         </TouchableOpacity>
