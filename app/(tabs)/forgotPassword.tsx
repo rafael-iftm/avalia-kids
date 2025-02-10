@@ -23,7 +23,7 @@ export default function ForgotPasswordScreen() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(value)) {
-      setInputError('Insira um e-mail válido ou número de matrícula.');
+      setInputError('Insira um e-mail válido.');
     } else {
       setInputError('');
     }

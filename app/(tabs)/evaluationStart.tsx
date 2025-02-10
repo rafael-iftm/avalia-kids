@@ -67,7 +67,6 @@ export default function EvaluationStartScreen() {
       <View style={styles.container}>
         <CustomHeaderBar
           leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
-          rightIcon={{ name: 'log-out-outline', route: routes.login }}
         />
 
         {/* Conteúdo centralizado */}

@@ -44,19 +44,19 @@ export default function RegisterScreen() {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
-    if (confirmPassword !== '' && !validatePassword(value, confirmPassword)) {
-      setPasswordError('As senhas não coincidem.');
-    } else {
+    if (value === confirmPassword) {
       setPasswordError('');
+    } else {
+      setPasswordError('As senhas não coincidem.');
     }
   };
 
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
-    if (password !== '' && !validatePassword(password, value)) {
-      setPasswordError('As senhas não coincidem.');
-    } else {
+    if (password === value) {
       setPasswordError('');
+    } else {
+      setPasswordError('As senhas não coincidem.');
     }
   };
 
