@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import RegistrationModal from '../../components/ui/RegistrationModal';
-import ConfirmationModal from '../../components/ui/ConfirmationModal';
-import StudentListHeader from '../../components/ui/StudentListHeader';
-import StudentItem from '../../components/ui/StudentItem';
-import { sortStudents, searchStudents } from '../../utils/sortAndSearch';
-import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
-import { routes } from '@/routes';
-import { getStudentsByParent } from '@/services/studentService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert } from 'react-native';
-import axios from 'axios';
-import { Student } from '@/types/Student';
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
+import CustomHeaderBar from "@/components/ui/CustomHeaderBar";
+import RegistrationModal from "@/components/ui/RegistrationModal";
+import StudentItem from "@/components/ui/StudentItem";
+import StudentListHeader from "@/components/ui/StudentListHeader";
+import { routes } from "@/routes";
+import { getStudentsByParent } from "@/services/studentService";
+import { Student } from "@/types/Student";
+import { searchStudents, sortStudents } from "@/utils/sortAndSearch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, useRouter } from "expo-router";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, StyleSheet } from "react-native";
 
-type SortBy = 'alfabetica' | 'turma';
+// Definição do tipo SortBy
+type SortBy = "alfabetica" | "turma";
 
 export default function StudentManagementScreen() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortBy>('alfabetica');
+  const [allStudents, setAllStudents] = useState<Student[]>([]); // Lista original
+  const [students, setStudents] = useState<Student[]>([]); // Lista filtrada
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortBy>("alfabetica");
   const [isModalVisible, setModalVisible] = useState(false);
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
-  const [newStudentName, setNewStudentName] = useState('');
-  const [newStudentBirthDate, setNewStudentBirthDate] = useState('');
+  const [newStudentName, setNewStudentName] = useState("");
+  const [newStudentBirthDate, setNewStudentBirthDate] = useState("");
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -39,44 +37,47 @@ export default function StudentManagementScreen() {
     const fetchStudents = async () => {
       try {
         setLoading(true);
-        const parentId = await AsyncStorage.getItem('userId');
+        const parentId = await AsyncStorage.getItem("userId");
         if (!parentId) {
-          Alert.alert('Erro', 'ID do responsável não encontrado.');
+          Alert.alert("Erro", "ID do responsável não encontrado.");
           return;
         }
         const studentsData = await getStudentsByParent(parentId);
-        setStudents(studentsData);
+        setAllStudents(studentsData); // Guarda a lista original
+        setStudents(studentsData); // Define a lista inicial
       } catch (error) {
-        console.log('[Gerenciamento de Alunos] Erro ao buscar alunos:', error);
-        Alert.alert('Erro', 'Erro ao carregar os alunos. Verifique sua conexão.');
+        console.log("[Gerenciamento de Alunos] Erro ao buscar alunos:", error);
+        Alert.alert("Erro", "Erro ao carregar os alunos. Verifique sua conexão.");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchStudents();
   }, []);
-  
-  
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    const filteredStudents = searchStudents(students, query);
-    setStudents(sortStudents(filteredStudents, sortBy));
+    if (!query.trim()) {
+      setStudents(sortStudents(allStudents, sortBy)); // Restaura a lista original ao apagar a busca
+    } else {
+      const filteredStudents = searchStudents(allStudents, query);
+      setStudents(sortStudents(filteredStudents, sortBy));
+    }
   };
 
   const toggleSort = () => {
-    const newSortBy: SortBy = sortBy === 'alfabetica' ? 'turma' : 'alfabetica';
+    const newSortBy: SortBy = sortBy === "alfabetica" ? "turma" : "alfabetica";
     setSortBy(newSortBy);
-    setStudents(sortStudents(students, newSortBy));
+    setStudents(sortStudents(allStudents, newSortBy));
   };
 
   return (
     <>
       <CustomHeaderBar
-        title='Alunos'
-        leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
-        rightIcon={{ name: 'log-out-outline', route: routes.login }}
+        title="Alunos"
+        leftIcon={{ name: "arrow-back-outline", route: routes.home }}
+        rightIcon={{ name: "log-out-outline", route: routes.login }}
       />
 
       {loading ? (
@@ -86,7 +87,7 @@ export default function StudentManagementScreen() {
           data={students}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <StudentItem student={item} onEvaluate={() => router.push('/quiz')} />
+            <StudentItem student={item} onEvaluate={() => router.push("/quiz")} />
           )}
           ListHeaderComponent={
             <StudentListHeader
@@ -122,7 +123,7 @@ export default function StudentManagementScreen() {
           setModalVisible(true);
         }}
         onConfirm={() => {
-          console.log('[Gerenciamento de Alunos] Novo aluno confirmado:', newStudentName);
+          console.log("[Gerenciamento de Alunos] Novo aluno confirmado:", newStudentName);
           setConfirmationVisible(false);
         }}
       />
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   },
   loader: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

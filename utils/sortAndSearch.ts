@@ -12,7 +12,7 @@ export const sortStudents = (students: Student[], sortBy: 'alfabetica' | 'turma'
     if (sortBy === 'alfabetica') {
       return a.name.localeCompare(b.name); // Ordena os nomes em ordem alfabética
     } else if (sortBy === 'turma') {
-      return a.grade.localeCompare(b.grade); // Ordena pela turma
+      return a.className.localeCompare(b.className); // Ordena pela turma
     }
     return 0;
   });
