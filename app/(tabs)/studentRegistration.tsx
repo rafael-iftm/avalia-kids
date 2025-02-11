@@ -110,17 +110,25 @@ export default function StudentRegistrationScreen() {
       console.log('[Registro de Aluno] Iniciando o processo de registro do aluno...');
   
       const token = await getAuthToken();
-      console.log('[Registro de Aluno] Token JWT obtido:', token);
+      const parentId = await AsyncStorage.getItem('userId');  // Recupera o ID do usuário logado
   
+      if (!parentId) {
+        Alert.alert('Erro', 'Não foi possível encontrar o ID do responsável.');
+        return;
+      }
+  
+      console.log('[Registro de Aluno] Token JWT obtido:', token);
+      console.log('[Registro de Aluno] ID do responsável:', parentId);
       console.log('[Registro de Aluno] Enviando dados do aluno:', { studentName, birthDate });
-      const response = await registerStudent(studentName, birthDate, token);
+  
+      const response = await registerStudent(studentName, birthDate, token, parentId);
   
       console.log('[Registro de Aluno] Resposta do backend:', response);
       Alert.alert('Sucesso', 'Aluno cadastrado com sucesso!');
       setModalVisible(false);
       router.push('/home');
     } catch (error) {
-      console.log('[Registro de Aluno] Erro durante o registro:', error);
+      console.error('[Registro de Aluno] Erro durante o registro:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
@@ -134,7 +142,6 @@ export default function StudentRegistrationScreen() {
       }
     }
   };
-  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

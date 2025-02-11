@@ -1,18 +1,16 @@
 import api from '../utils/api';
 
-export const registerStudent = async (name: string, birthDate: string, token: string) => {
-  const response = await api.post(
-    '/students/register',
-    new URLSearchParams({
+export const registerStudent = async (name: string, birthDate: string, token: string, parentId: string) => {
+  const response = await api.post('/students/register', null, {
+    params: {
       name,
       birthDate,
-    }),
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    }
-  );
+      parentId,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return response.data;
 };

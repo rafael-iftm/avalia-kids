@@ -49,24 +49,30 @@ export default function LoginScreen() {
       console.log('[Login] Resposta do login:', response);
   
       const token = response.token;
+      const userId = response.userId;
       const name = response.name;
+      const role = response.role;
   
-      if (!token || !name) {
-        throw new Error('Token ou nome não recebido do servidor.');
+      if (!token || !userId || !name || !role) {
+        throw new Error('Dados incompletos recebidos do servidor.');
       }
   
       console.log('[Login] Token JWT recebido:', token);
+      console.log('[Login] ID do usuário recebido:', userId);
       console.log('[Login] Nome do usuário recebido:', name);
+      console.log('[Login] Role do usuário recebido:', role);
   
       await storeAuthToken(token);
+      await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('name', name);
+      await AsyncStorage.setItem('role', role);
   
       console.log('[Login] Dados de autenticação armazenados com sucesso.');
   
       Alert.alert('Sucesso', 'Login bem-sucedido!');
       router.push('/studentRegistration');
     } catch (error) {
-      console.log('[Login] Erro durante o login:', error);
+      console.error('[Login] Erro durante o login:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
@@ -92,7 +98,7 @@ export default function LoginScreen() {
       }
     }
   };
-
+  
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
