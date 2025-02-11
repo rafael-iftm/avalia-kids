@@ -47,14 +47,42 @@ export default function StudentRegistrationScreen() {
     return areFieldsValid([studentName.trim() !== '', validateBirthDate(birthDate)]);
   };
 
+  const isAgeWithinRange = (birthDate: string): boolean => {
+    const currentYear = new Date().getFullYear();
+    const birthYear = new Date(birthDate.split('/').reverse().join('-')).getFullYear();
+    const age = currentYear - birthYear;
+  
+    if (age < 5 || age > 12) {
+      Alert.alert(
+        'Idade inválida',
+        'A idade permitida para cadastro é entre 5 e 12 anos.'
+      );
+      return false;
+    }
+  
+    if (age < 6 || age > 10) {
+      Alert.alert(
+        'Idade fora da faixa recomendada',
+        'A idade recomendada é entre 6 e 10 anos.'
+      );
+    }
+  
+    return true;
+  };
+  
   const handleRegisterStudent = () => {
     if (!isFormValid()) {
       Alert.alert('Erro', 'Por favor, insira um nome válido e uma data de nascimento válida.');
       return;
     }
+  
+    if (!isAgeWithinRange(birthDate)) {
+      return;
+    }
+  
     setModalVisible(true);
   };
-
+  
   const confirmRegistration = async () => {
     try {
       console.log('[Registro de Aluno] Iniciando o processo de registro do aluno...');
