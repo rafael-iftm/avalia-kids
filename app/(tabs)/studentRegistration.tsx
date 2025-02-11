@@ -46,7 +46,7 @@ export default function StudentRegistrationScreen() {
           console.log('[Menu] Nome do usuário não encontrado no armazenamento.');
         }
       } catch (error) {
-        console.error('[Menu] Erro ao recuperar o nome do usuário:', error);
+        console.log('[Menu] Erro ao recuperar o nome do usuário:', error);
       }
     };
 
@@ -120,7 +120,7 @@ export default function StudentRegistrationScreen() {
       setModalVisible(false);
       router.push('/home');
     } catch (error) {
-      console.error('[Registro de Aluno] Erro durante o registro:', error);
+      console.log('[Registro de Aluno] Erro durante o registro:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;

@@ -5,7 +5,7 @@ export const storeAuthToken = async (token: string) => {
     await AsyncStorage.setItem('authToken', token);
     console.log('Token armazenado com sucesso.');
   } catch (error) {
-    console.error('Erro ao armazenar o token JWT:', error);
+    console.log('Erro ao armazenar o token JWT:', error);
   }
 };
 

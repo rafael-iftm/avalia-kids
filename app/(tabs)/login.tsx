@@ -9,6 +9,7 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { loginUser } from '@/services/authService';
 import { Alert } from 'react-native';
+import axios from 'axios';
 import { storeAuthToken } from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -65,11 +66,33 @@ export default function LoginScreen() {
       Alert.alert('Sucesso', 'Login bem-sucedido!');
       router.push('/studentRegistration');
     } catch (error) {
-      console.error('[Login] Erro durante o login:', error);
-      Alert.alert('Erro', 'Erro ao tentar fazer login.');
-    }
-  };  
+      console.log('[Login] Erro durante o login:', error);
   
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || 'Erro inesperado.';
+        console.log('[Login] Erro HTTP', { status, message });
+  
+        switch (status) {
+          case 401:
+            Alert.alert('Erro', 'Credenciais inválidas. Por favor, tente novamente.');
+            break;
+          case 400:
+            Alert.alert('Erro', 'Requisição inválida. Verifique os dados informados.');
+            break;
+          case 500:
+            Alert.alert('Erro', 'Erro interno no servidor. Tente novamente mais tarde.');
+            break;
+          default:
+            Alert.alert('Erro', message);
+            break;
+        }
+      } else {
+        Alert.alert('Erro', 'Erro de rede ou erro desconhecido.');
+      }
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -78,53 +101,53 @@ export default function LoginScreen() {
         />
 
         <View style={styles.content}>
-        {/* Título */}
-        <Text style={styles.title}>Entrar</Text>
+          {/* Título */}
+          <Text style={styles.title}>Entrar</Text>
 
-        {/* Campo de e-mail */}
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="#888888"
-          style={styles.input}
-          value={email}
-          onChangeText={handleEmailChange}
-          keyboardType="email-address"
-        />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-        {/* Campo de senha */}
-        <View style={styles.passwordContainer}>
+          {/* Campo de e-mail */}
           <TextInput
-            placeholder="Senha"
+            placeholder="Email"
             placeholderTextColor="#888888"
-            secureTextEntry={!passwordVisible}
-            style={styles.passwordInput}
-            value={password}
-            onChangeText={setPassword}
+            style={styles.input}
+            value={email}
+            onChangeText={handleEmailChange}
+            keyboardType="email-address"
           />
-          <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
-            <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
-          </TouchableOpacity>
-        </View>
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-        {/* Botão de continuar */}
-        <TouchableOpacity
-          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
-          disabled={!isFormValid()}
-          onPress={handleLogin}
-        >
-          <Text style={styles.primaryButtonText}>Continuar</Text>
-        </TouchableOpacity>
+          {/* Campo de senha */}
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Senha"
+              placeholderTextColor="#888888"
+              secureTextEntry={!passwordVisible}
+              style={styles.passwordInput}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+              <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
+            </TouchableOpacity>
+          </View>
 
-        {/* Links para registro e recuperação de senha */}
-        <View style={styles.linksContainer}>
-          <TouchableOpacity onPress={() => router.push('/register')}>
-            <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
+          {/* Botão de continuar */}
+          <TouchableOpacity
+            style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
+            disabled={!isFormValid()}
+            onPress={handleLogin}
+          >
+            <Text style={styles.primaryButtonText}>Continuar</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push('/forgotPassword')}>
-            <Text style={styles.linkText}>Esqueceu sua senha?</Text>
-          </TouchableOpacity>
-        </View>
+
+          {/* Links para registro e recuperação de senha */}
+          <View style={styles.linksContainer}>
+            <TouchableOpacity onPress={() => router.push('/register')}>
+              <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/forgotPassword')}>
+              <Text style={styles.linkText}>Esqueceu sua senha?</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>

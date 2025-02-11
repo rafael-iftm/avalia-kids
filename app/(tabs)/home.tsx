@@ -26,7 +26,7 @@ export default function HomeScreen() {
           console.log('[Menu] Nome do usuário não encontrado no armazenamento.');
         }
       } catch (error) {
-        console.error('[Menu] Erro ao recuperar o nome do usuário:', error);
+        console.log('[Menu] Erro ao recuperar o nome do usuário:', error);
       }
     };
 

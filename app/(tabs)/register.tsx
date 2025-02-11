@@ -98,7 +98,7 @@ export default function RegisterScreen() {
       Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
       router.push('/login');
     } catch (error) {
-      console.error('[Register] Erro durante o registro:', error);
+      console.log('[Register] Erro durante o registro:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
