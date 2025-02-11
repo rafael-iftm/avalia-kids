@@ -110,7 +110,7 @@ export default function StudentRegistrationScreen() {
       console.log('[Registro de Aluno] Iniciando o processo de registro do aluno...');
   
       const token = await getAuthToken();
-      const parentId = await AsyncStorage.getItem('userId');  // Recupera o ID do usuário logado
+      const parentId = await AsyncStorage.getItem('userId');
   
       if (!parentId) {
         Alert.alert('Erro', 'Não foi possível encontrar o ID do responsável.');
@@ -128,7 +128,7 @@ export default function StudentRegistrationScreen() {
       setModalVisible(false);
       router.push('/home');
     } catch (error) {
-      console.error('[Registro de Aluno] Erro durante o registro:', error);
+      console.log('[Registro de Aluno] Erro durante o registro:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;

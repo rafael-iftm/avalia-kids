@@ -12,6 +12,7 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { storeAuthToken } from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getStudentsByParent } from '@/services/studentService';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -69,10 +70,29 @@ export default function LoginScreen() {
   
       console.log('[Login] Dados de autenticação armazenados com sucesso.');
   
-      Alert.alert('Sucesso', 'Login bem-sucedido!');
-      router.push('/studentRegistration');
+      if (role === 'TEACHER') {
+        console.log('[Login] Usuário é TEACHER, redirecionando para Home.');
+        router.push('/home');
+      } else if (role === 'PARENT') {
+        console.log('[Login] Usuário é PARENT, verificando estudantes vinculados...');
+  
+        try {
+          const students = await getStudentsByParent(userId);
+  
+          if (students.length > 0) {
+            console.log('[Login] Usuário PARENT tem estudantes cadastrados, redirecionando para Home.');
+            router.push('/home');
+          } else {
+            console.log('[Login] Usuário PARENT não tem estudantes, redirecionando para Student Registration.');
+            router.push('/studentRegistration');
+          }
+        } catch (error) {
+          console.error('[Login] Erro ao buscar estudantes do PARENT:', error);
+          Alert.alert('Erro', 'Erro ao buscar alunos. Verifique sua conexão.');
+        }
+      }
     } catch (error) {
-      console.error('[Login] Erro durante o login:', error);
+      console.log('[Login] Erro durante o login:', error);
   
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
@@ -98,6 +118,7 @@ export default function LoginScreen() {
       }
     }
   };
+  
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

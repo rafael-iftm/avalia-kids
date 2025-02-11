@@ -11,7 +11,7 @@ const StudentItem: React.FC<StudentItemProps> = ({ student, onEvaluate }) => {
   return (
     <View style={styles.studentRow}>
       <Text style={[styles.studentCell, styles.studentCellName]}>{student.name}</Text>
-      <Text style={[styles.studentCell, styles.studentCellGrade]}>{student.grade}</Text>
+      <Text style={[styles.studentCell, styles.studentCellGrade]}>{student.className}</Text>
       {student.score !== null ? (
         <Text style={[styles.studentCell, styles.studentCellScore]}>
           {student.score}/10
