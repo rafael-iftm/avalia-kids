@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import { routes } from '@/routes';
 import { registerStudent } from '@/services/studentService';
 import { getAuthToken } from '@/utils/auth';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function StudentRegistrationScreen() {
@@ -28,10 +29,30 @@ export default function StudentRegistrationScreen() {
   const [isModalVisible, setModalVisible] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
+  const [userName, setUserName] = useState('');
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('name');
+        if (storedName) {
+          setUserName(storedName);
+        } else {
+          console.log('[Menu] Nome do usuário não encontrado no armazenamento.');
+        }
+      } catch (error) {
+        console.error('[Menu] Erro ao recuperar o nome do usuário:', error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
 
   const handleNameChange = (text: string) => {
     if (text === '' || validateName(text)) {
@@ -80,8 +101,9 @@ export default function StudentRegistrationScreen() {
       return;
     }
   
+    Keyboard.dismiss();
     setModalVisible(true);
-  };
+  };  
   
   const confirmRegistration = async () => {
     try {
@@ -123,7 +145,7 @@ export default function StudentRegistrationScreen() {
         />
 
         <View style={styles.content}>
-          <Text style={styles.greeting}>Olá, {`{Nome}`}</Text>
+          <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
           <Text style={styles.instructions}>
             Antes de realizar alguma avaliação, você deve cadastrar os alunos que serão avaliados:
           </Text>

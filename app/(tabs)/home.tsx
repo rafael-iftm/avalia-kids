@@ -1,29 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 
 export default function HomeScreen() {
   const router = useRouter();
   const navigation = useNavigation();
+  const [userName, setUserName] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('name');
+        if (storedName) {
+          setUserName(storedName);
+        } else {
+          console.log('[Menu] Nome do usuário não encontrado no armazenamento.');
+        }
+      } catch (error) {
+        console.error('[Menu] Erro ao recuperar o nome do usuário:', error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
   return (
     <View style={styles.container}>
       <CustomHeaderBar
-        title='Menu'
+        title="Menu"
         leftIcon={{ name: 'settings-outline', route: routes.settings }}
         rightIcon={{ name: 'log-out-outline', route: routes.login }}
       />
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.greeting}>Olá, {`{Nome}`}</Text>
+        <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Text style={styles.question}>O que deseja fazer?</Text>
 
         <Image
