@@ -9,6 +9,7 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { loginUser } from '@/services/authService';
 import { Alert } from 'react-native';
+import axios from 'axios';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -43,13 +44,29 @@ export default function LoginScreen() {
       Alert.alert('Sucesso', 'Login bem-sucedido!');
       router.push('/studentRegistration');
     } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert('Erro', error.message || 'Credenciais inválidas.');
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || 'Erro inesperado.';
+  
+        switch (status) {
+          case 401:
+            Alert.alert('Erro', 'Credenciais inválidas.');
+            break;
+          case 400:
+            Alert.alert('Erro', 'Requisição inválida. Verifique os dados informados.');
+            break;
+          case 500:
+            Alert.alert('Erro', 'Erro interno no servidor. Tente novamente mais tarde.');
+            break;
+          default:
+            Alert.alert('Erro', message);
+            break;
+        }
       } else {
-        Alert.alert('Erro', 'Erro desconhecido.');
+        Alert.alert('Erro', 'Erro de rede ou erro desconhecido.');
       }
     }
-  };
+  };  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

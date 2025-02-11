@@ -9,6 +9,7 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { registerUser } from '@/services/authService';
 import { Alert } from 'react-native';
+import axios from 'axios';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -76,11 +77,12 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email.');
+      setEmailError('Por favor, insira um e-mail válido.');
       return;
     }
+  
     if (password !== confirmPassword) {
-      setPasswordError('Passwords do not match.');
+      setPasswordError('As senhas não coincidem.');
       return;
     }
   
@@ -88,13 +90,29 @@ export default function RegisterScreen() {
   
     try {
       await registerUser(name, email, password, role);
-      Alert.alert('Success', 'User registered successfully!');
+      Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
       router.push('/login');
     } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert('Error', error.message || 'Failed to register the user.');
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || 'Erro inesperado.';
+  
+        switch (status) {
+          case 400:
+            Alert.alert('Erro', 'Dados inválidos. Verifique as informações fornecidas.');
+            break;
+          case 409:
+            Alert.alert('Erro', 'Este e-mail já está registrado.');
+            break;
+          case 500:
+            Alert.alert('Erro', 'Erro interno no servidor. Tente novamente mais tarde.');
+            break;
+          default:
+            Alert.alert('Erro', message);
+            break;
+        }
       } else {
-        Alert.alert('Error', 'Unknown error.');
+        Alert.alert('Erro', 'Erro de rede ou erro desconhecido.');
       }
     }
   };  
