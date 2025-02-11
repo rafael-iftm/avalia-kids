@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,14 +12,33 @@ import { useLayoutEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function WelcomeScreen() {
+  const [userName, setUserName] = useState('');
   const router = useRouter();
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const storedName = await AsyncStorage.getItem('name');
+        if (storedName) {
+          setUserName(storedName);
+        } else {
+          console.log('[Menu] Nome do usuário não encontrado no armazenamento.');
+        }
+      } catch (error) {
+        console.log('[Menu] Erro ao recuperar o nome do usuário:', error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -29,7 +48,7 @@ export default function WelcomeScreen() {
       />
       {/* Conteúdo principal */}
       <View style={styles.content}>
-        <Text style={styles.greeting}>Olá {`{Nome}`}</Text>
+        <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
           source={require('../../assets/images/mascote.png')}
           style={styles.mascotImage}
