@@ -96,11 +96,10 @@ export default function EvaluationStartScreen() {
         return;
       }
   
-      // Valida a senha do responsável
       const { isValid, message } = await validateParentPassword(parentId, password);
   
       if (isValid) {
-        Alert.alert('Sucesso', message);
+        //Alert.alert('Sucesso', message);
         router.push(`/welcome`);
       } else {
         Alert.alert('Erro', message);
