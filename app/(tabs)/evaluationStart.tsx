@@ -11,27 +11,27 @@ import {
   ActionSheetIOS,
   Keyboard,
   TouchableWithoutFeedback,
-  ActivityIndicator,
-  Alert
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentsByParent } from '@/services/studentService';
+import { validateParentPassword } from '@/services/authService';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '@/types/Student';
 
 export default function EvaluationStartScreen() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);  
   const [selectedStudent, setSelectedStudent] = useState('');
   const [selectedStudentName, setSelectedStudentName] = useState('Selecione um aluno');
   const [password, setPassword] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -42,19 +42,17 @@ export default function EvaluationStartScreen() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        setLoading(true);
         const parentId = await AsyncStorage.getItem('userId');
         if (!parentId) {
           Alert.alert('Erro', 'ID do responsável não encontrado.');
           return;
         }
-        console.log('[Início da Avaliação] Buscando alunos do responsável:', parentId);
-        const studentsData = await getStudentsByParent(parentId);
-        console.log('[Início da Avaliação] Alunos carregados:', studentsData);
+        const studentsData: Student[] = await getStudentsByParent(parentId);
+        setAllStudents(studentsData);
         setStudents(studentsData);
       } catch (error) {
-        console.error('[Início da Avaliação] Erro ao buscar alunos:', error);
-        Alert.alert('Erro', 'Erro ao carregar os alunos. Verifique sua conexão.');
+        console.log('[Início da Avaliação] Erro ao buscar alunos:', error);
+        Alert.alert('Erro', 'Erro ao carregar os alunos.');
       } finally {
         setLoading(false);
       }
@@ -85,84 +83,91 @@ export default function EvaluationStartScreen() {
     );
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (selectedStudent.trim() === '' || password.trim() === '') {
-      alert('Por favor, selecione um aluno e insira a senha do responsável.');
+      Alert.alert('Erro', 'Selecione um aluno e insira a senha do responsável.');
       return;
     }
-    router.push(`/welcome`);
+  
+    try {
+      const parentId = await AsyncStorage.getItem('userId');
+      if (!parentId) {
+        Alert.alert('Erro', 'ID do responsável não encontrado.');
+        return;
+      }
+  
+      // Valida a senha do responsável
+      const { isValid, message } = await validateParentPassword(parentId, password);
+  
+      if (isValid) {
+        Alert.alert('Sucesso', message);
+        router.push(`/welcome`);
+      } else {
+        Alert.alert('Erro', message);
+      }
+    } catch (error: unknown) {
+      console.log('[Início da Avaliação] Erro ao validar senha:', error);
+      Alert.alert('Erro', 'Erro inesperado ao validar senha.');
+    }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <CustomHeaderBar
-          leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
-        />
+        <CustomHeaderBar leftIcon={{ name: 'arrow-back-outline', route: routes.home }} />
 
         <View style={styles.content}>
           <Text style={styles.title}>Iniciar Avaliação</Text>
 
-          {loading ? (
-            <ActivityIndicator size="large" color="#1B3C87" />
-          ) : (
-            <>
-              <Text style={styles.sectionText}>1. Identifique o aluno que será avaliado:</Text>
-              <TouchableOpacity
-                style={styles.pickerButton}
-                onPress={Platform.OS === 'ios' ? showPickerIOS : () => setModalVisible(true)}
-              >
-                <Text style={styles.pickerButtonText}>{selectedStudentName}</Text>
-                <Ionicons name="chevron-down-outline" size={20} color="#333" />
-              </TouchableOpacity>
+          <Text style={styles.sectionText}>1. Identifique o aluno que será avaliado:</Text>
+          <TouchableOpacity
+            style={styles.pickerButton}
+            onPress={Platform.OS === 'ios' ? showPickerIOS : () => setModalVisible(true)}
+          >
+            <Text style={styles.pickerButtonText}>{selectedStudentName}</Text>
+            <Ionicons name="chevron-down-outline" size={20} color="#333" />
+          </TouchableOpacity>
 
-              {Platform.OS !== 'ios' && (
-                <Modal visible={isModalVisible} transparent animationType="slide">
-                  <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                      <Text style={styles.modalTitle}>Selecione um aluno</Text>
-                      <FlatList
-                        data={students}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                          <TouchableOpacity
-                            style={styles.modalItem}
-                            onPress={() => handleStudentSelection(item.id, item.name)}
-                          >
-                            <Text style={styles.modalItemText}>{item.name}</Text>
-                          </TouchableOpacity>
-                        )}
-                      />
-                      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                        <Text style={styles.closeButtonText}>Cancelar</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </Modal>
-              )}
+          <Modal visible={isModalVisible} transparent animationType="slide">
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Selecione um aluno</Text>
+                <FlatList
+                  data={students}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.modalItem}
+                      onPress={() => handleStudentSelection(item.id, item.name)}
+                    >
+                      <Text style={styles.modalItemText}>{item.name}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                  <Text style={styles.closeButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
 
-              <Text style={styles.sectionText}>2. Use a senha do responsável para iniciar</Text>
-              <TextInput
-                placeholder="Senha"
-                placeholderTextColor="#888888"
-                secureTextEntry
-                style={styles.input}
-                value={password}
-                onChangeText={setPassword}
-              />
+          <Text style={styles.sectionText}>2. Use a senha do responsável para iniciar</Text>
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor="#888888"
+            secureTextEntry
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+          />
 
-              <TouchableOpacity
-                style={[
-                  styles.continueButton,
-                  (selectedStudent === '' || password === '') && styles.buttonDisabled,
-                ]}
-                disabled={selectedStudent === '' || password === ''}
-                onPress={handleContinue}
-              >
-                <Text style={styles.buttonText}>Continuar</Text>
-              </TouchableOpacity>
-            </>
-          )}
+          <TouchableOpacity
+            style={[styles.continueButton, (!selectedStudent || !password) && styles.buttonDisabled]}
+            disabled={!selectedStudent || !password}
+            onPress={handleContinue}
+          >
+            <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>

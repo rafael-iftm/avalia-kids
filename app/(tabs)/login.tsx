@@ -87,7 +87,7 @@ export default function LoginScreen() {
             router.push('/studentRegistration');
           }
         } catch (error) {
-          console.error('[Login] Erro ao buscar estudantes do PARENT:', error);
+          console.log('[Login] Erro ao buscar estudantes do PARENT:', error);
           Alert.alert('Erro', 'Erro ao buscar alunos. Verifique sua conexão.');
         }
       }
