@@ -17,6 +17,10 @@ import { validateName, validateBirthDate } from '../../utils/validation';
 import { formatBirthDate, areFieldsValid } from '../../utils/form';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { registerStudent } from '@/services/studentService';
+import { getAuthToken } from '@/utils/auth';
+import axios from 'axios';
+
 
 export default function StudentRegistrationScreen() {
   const [studentName, setStudentName] = useState('');
@@ -33,7 +37,7 @@ export default function StudentRegistrationScreen() {
     if (text === '' || validateName(text)) {
       setStudentName(text);
     }
-  };  
+  };
 
   const handleBirthDateChange = (text: string) => {
     setBirthDate(formatBirthDate(text));
@@ -51,11 +55,36 @@ export default function StudentRegistrationScreen() {
     setModalVisible(true);
   };
 
-  const confirmRegistration = () => {
-    console.log('Aluno confirmado:', { studentName, birthDate });
-    setModalVisible(false);
-    router.push('/home');
+  const confirmRegistration = async () => {
+    try {
+      console.log('[Registro de Aluno] Iniciando o processo de registro do aluno...');
+  
+      const token = await getAuthToken();
+      console.log('[Registro de Aluno] Token JWT obtido:', token);
+  
+      console.log('[Registro de Aluno] Enviando dados do aluno:', { studentName, birthDate });
+      const response = await registerStudent(studentName, birthDate, token);
+  
+      console.log('[Registro de Aluno] Resposta do backend:', response);
+      Alert.alert('Sucesso', 'Aluno cadastrado com sucesso!');
+      setModalVisible(false);
+      router.push('/home');
+    } catch (error) {
+      console.error('[Registro de Aluno] Erro durante o registro:', error);
+  
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || 'Erro ao registrar o aluno.';
+        console.log('[Registro de Aluno] Erro HTTP', { status, message });
+  
+        Alert.alert('Erro', message);
+      } else {
+        console.log('[Registro de Aluno] Erro de conexão ou erro desconhecido.');
+        Alert.alert('Erro', 'Erro de conexão. Verifique sua internet.');
+      }
+    }
   };
+  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -65,7 +94,6 @@ export default function StudentRegistrationScreen() {
           rightIcon={{ name: 'log-out-outline', route: routes.login }}
         />
 
-        {/* Conteúdo principal */}
         <View style={styles.content}>
           <Text style={styles.greeting}>Olá, {`{Nome}`}</Text>
           <Text style={styles.instructions}>
@@ -98,7 +126,6 @@ export default function StudentRegistrationScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Modal de confirmação */}
         <ConfirmationModal
           visible={isModalVisible}
           newStudentName={studentName}

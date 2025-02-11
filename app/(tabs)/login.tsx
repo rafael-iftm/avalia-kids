@@ -10,6 +10,7 @@ import { routes } from '@/routes';
 import { loginUser } from '@/services/authService';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { storeAuthToken } from '@/utils/auth';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -36,17 +37,35 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     if (!validateEmail(email)) {
       setEmailError('Insira um e-mail válido.');
+      console.log('[Login] E-mail inválido:', email);
       return;
     }
   
     try {
-      await loginUser(email, password);
+      console.log('[Login] Tentando fazer login com:', email);
+  
+      const response = await loginUser(email, password);
+      console.log('[Login] Resposta do login:', response);
+  
+      const token = response.token;
+      if (!token) {
+        throw new Error('Token não recebido do servidor.');
+      }
+  
+      console.log('[Login] Token JWT recebido:', token);
+  
+      await storeAuthToken(token);
+      console.log('[Login] Token armazenado com sucesso.');
+  
       Alert.alert('Sucesso', 'Login bem-sucedido!');
       router.push('/studentRegistration');
     } catch (error) {
+      console.error('[Login] Erro durante o login:', error);
+  
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
         const message = error.response.data.message || 'Erro inesperado.';
+        console.log('[Login] Erro HTTP', { status, message });
   
         switch (status) {
           case 401:
@@ -66,7 +85,7 @@ export default function LoginScreen() {
         Alert.alert('Erro', 'Erro de rede ou erro desconhecido.');
       }
     }
-  };  
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

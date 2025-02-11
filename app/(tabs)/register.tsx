@@ -78,24 +78,32 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (!validateEmail(email)) {
       setEmailError('Por favor, insira um e-mail válido.');
+      console.log('[Register] E-mail inválido:', email);
       return;
     }
   
     if (password !== confirmPassword) {
       setPasswordError('As senhas não coincidem.');
+      console.log('[Register] Senhas não coincidem:', { password, confirmPassword });
       return;
     }
   
     const role = selectedRole === 'Responsável' ? 'PARENT' : 'TEACHER';
+    console.log('[Register] Tentando registrar o usuário:', { name, email, role });
   
     try {
-      await registerUser(name, email, password, role);
+      const response = await registerUser(name, email, password, role);
+      console.log('[Register] Registro bem-sucedido. Resposta do backend:', response);
+  
       Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
       router.push('/login');
     } catch (error) {
+      console.error('[Register] Erro durante o registro:', error);
+  
       if (axios.isAxiosError(error) && error.response) {
         const status = error.response.status;
         const message = error.response.data.message || 'Erro inesperado.';
+        console.log('[Register] Erro HTTP', { status, message });
   
         switch (status) {
           case 400:
@@ -115,7 +123,7 @@ export default function RegisterScreen() {
         Alert.alert('Erro', 'Erro de rede ou erro desconhecido.');
       }
     }
-  };  
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
