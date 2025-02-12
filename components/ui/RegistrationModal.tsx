@@ -40,6 +40,22 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
     return name.trim() !== '' && isValidBirthDate(birthDate);
   };
 
+  const isAgeWithinRange = (birthDate: string): boolean => {
+    const currentYear = new Date().getFullYear();
+    const birthYear = new Date(birthDate.split('/').reverse().join('-')).getFullYear();
+    const age = currentYear - birthYear;
+  
+    if (age < 5 || age > 12) {
+      Alert.alert(
+        'Idade inválida',
+        'A idade permitida para cadastro é entre 5 e 12 anos.'
+      );
+      return false;
+    }
+  
+    return true;
+  };
+
   // Função para verificar se a data é válida e não está no futuro
   const isValidBirthDate = (date: string): boolean => {
     const [day, month, year] = date.split('/').map(Number);
@@ -56,6 +72,10 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
   const handleSubmit = () => {
     if (!isValidBirthDate(birthDate)) {
       Alert.alert('Data inválida', 'A data de nascimento não pode ser futura ou inválida.');
+      return;
+    }
+  
+    if (!isAgeWithinRange(birthDate)) {
       return;
     }
 

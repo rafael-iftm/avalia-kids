@@ -81,13 +81,6 @@ export default function StudentRegistrationScreen() {
       return false;
     }
   
-    if (age < 6 || age > 10) {
-      Alert.alert(
-        'Idade fora da faixa recomendada',
-        'A idade recomendada é entre 6 e 10 anos.'
-      );
-    }
-  
     return true;
   };
   

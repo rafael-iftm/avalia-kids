@@ -4,13 +4,15 @@ import RegistrationModal from "@/components/ui/RegistrationModal";
 import StudentItem from "@/components/ui/StudentItem";
 import StudentListHeader from "@/components/ui/StudentListHeader";
 import { routes } from "@/routes";
-import { getStudentsByParent } from "@/services/studentService";
+import { getStudentsByParent, registerStudent } from "@/services/studentService";
 import { Student } from "@/types/Student";
 import { searchStudents, sortStudents } from "@/utils/sortAndSearch";
+import { getAuthToken } from "@/utils/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, StyleSheet } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Keyboard, StyleSheet } from "react-native";
+import axios from "axios";
 
 type SortBy = "alfabetica" | "turma";
 
@@ -33,39 +35,34 @@ export default function StudentManagementScreen() {
   }, [navigation]);
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        setLoading(true);
-        const parentId = await AsyncStorage.getItem("userId");
-        if (!parentId) {
-          Alert.alert("Erro", "ID do responsável não encontrado.");
-          return;
-        }
-        const studentsData: Student[] = await getStudentsByParent(parentId);
-  
-        if (studentsData.length === 0) {
-          Alert.alert("Erro", "Nenhum estudante encontrado para este responsável.");
-          return;
-        }
-          
-        const sortedStudents = [...studentsData].sort((a, b) => 
-          a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })
-        );
-  
-        setAllStudents(sortedStudents);
-        setStudents(sortedStudents);
-      } catch (error) {
-        console.log("[Gerenciamento de Alunos] Erro ao buscar alunos:", error);
-        Alert.alert("Erro", "Erro ao carregar os alunos.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
     fetchStudents();
   }, []);
-  
-  
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const parentId = await AsyncStorage.getItem("userId");
+      if (!parentId) {
+        Alert.alert("Erro", "ID do responsável não encontrado.");
+        return;
+      }
+      const studentsData = await getStudentsByParent(parentId);
+
+      // 🔹 Ordenação alfabética por nome
+      const sortedStudents = [...studentsData].sort((a, b) =>
+        a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })
+      );
+
+      setAllStudents(sortedStudents);
+      setStudents(sortedStudents);
+    } catch (error) {
+      console.log("[Gerenciamento de Alunos] Erro ao buscar alunos:", error);
+      Alert.alert("Erro", "Erro ao carregar os alunos.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (!query.trim()) {
@@ -80,6 +77,48 @@ export default function StudentManagementScreen() {
     const newSortBy: SortBy = sortBy === "alfabetica" ? "turma" : "alfabetica";
     setSortBy(newSortBy);
     setStudents(sortStudents(allStudents, newSortBy));
+  };
+
+  const confirmRegistration = async () => {
+    try {
+      console.log("[Registro de Aluno] Iniciando o processo de registro do aluno...");
+
+      const token = await getAuthToken();
+      const parentId = await AsyncStorage.getItem("userId");
+
+      if (!parentId) {
+        Alert.alert("Erro", "Não foi possível encontrar o ID do responsável.");
+        return;
+      }
+
+      console.log("[Registro de Aluno] Token JWT obtido:", token);
+      console.log("[Registro de Aluno] ID do responsável:", parentId);
+      console.log("[Registro de Aluno] Enviando dados do aluno:", { newStudentName, newStudentBirthDate });
+
+      await registerStudent(newStudentName, newStudentBirthDate, token, parentId);
+
+      console.log("[Registro de Aluno] Aluno cadastrado com sucesso!");
+
+      await fetchStudents();
+
+      setConfirmationVisible(false);
+      setModalVisible(false);
+      
+      // Alert.alert("Sucesso", "Aluno cadastrado com sucesso!");
+    } catch (error) {
+      console.log("[Registro de Aluno] Erro durante o registro:", error);
+
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || "Erro ao registrar o aluno.";
+        console.log("[Registro de Aluno] Erro HTTP", { status, message });
+
+        Alert.alert("Erro", message);
+      } else {
+        console.log("[Registro de Aluno] Erro de conexão ou erro desconhecido.");
+        Alert.alert("Erro", "Erro de conexão. Verifique sua internet.");
+      }
+    }
   };
 
   return (
@@ -132,10 +171,7 @@ export default function StudentManagementScreen() {
           setConfirmationVisible(false);
           setModalVisible(true);
         }}
-        onConfirm={() => {
-          console.log("[Gerenciamento de Alunos] Novo aluno confirmado:", newStudentName);
-          setConfirmationVisible(false);
-        }}
+        onConfirm={confirmRegistration}
       />
     </>
   );
