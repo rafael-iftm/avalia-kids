@@ -5,7 +5,7 @@ export const getQuestionsByClassLevel = async (classLevel: string) => {
     const response = await api.get(`/questions/${encodeURIComponent(classLevel)}`);
     return response.data;
   } catch (error) {
-    console.error('[Quiz] Erro ao buscar questões:', error);
+    console.log('[Quiz] Erro ao buscar questões:', error);
     throw error;
   }
 };

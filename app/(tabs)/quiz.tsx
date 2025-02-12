@@ -46,7 +46,7 @@ export default function QuizScreen() {
 
         setQuestions(fetchedQuestions);
       } catch (error) {
-        console.error('[Quiz] Erro ao buscar questões:', error);
+        console.log('[Quiz] Erro ao buscar questões:', error);
         Alert.alert('Erro', 'Erro ao carregar as questões.');
       } finally {
         setLoading(false);

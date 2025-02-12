@@ -12,12 +12,11 @@ import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, StyleSheet } from "react-native";
 
-// Definição do tipo SortBy
 type SortBy = "alfabetica" | "turma";
 
 export default function StudentManagementScreen() {
-  const [allStudents, setAllStudents] = useState<Student[]>([]); // Lista original
-  const [students, setStudents] = useState<Student[]>([]); // Lista filtrada
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortBy>("alfabetica");
   const [isModalVisible, setModalVisible] = useState(false);
@@ -42,24 +41,35 @@ export default function StudentManagementScreen() {
           Alert.alert("Erro", "ID do responsável não encontrado.");
           return;
         }
-        const studentsData = await getStudentsByParent(parentId);
-        setAllStudents(studentsData); // Guarda a lista original
-        setStudents(studentsData); // Define a lista inicial
+        const studentsData: Student[] = await getStudentsByParent(parentId);
+  
+        if (studentsData.length === 0) {
+          Alert.alert("Erro", "Nenhum estudante encontrado para este responsável.");
+          return;
+        }
+          
+        const sortedStudents = [...studentsData].sort((a, b) => 
+          a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })
+        );
+  
+        setAllStudents(sortedStudents);
+        setStudents(sortedStudents);
       } catch (error) {
         console.log("[Gerenciamento de Alunos] Erro ao buscar alunos:", error);
-        Alert.alert("Erro", "Erro ao carregar os alunos. Verifique sua conexão.");
+        Alert.alert("Erro", "Erro ao carregar os alunos.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchStudents();
   }, []);
-
+  
+  
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (!query.trim()) {
-      setStudents(sortStudents(allStudents, sortBy)); // Restaura a lista original ao apagar a busca
+      setStudents(sortStudents(allStudents, sortBy));
     } else {
       const filteredStudents = searchStudents(allStudents, query);
       setStudents(sortStudents(filteredStudents, sortBy));
