@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
-  Platform,
-  ActionSheetIOS,
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
@@ -25,8 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '@/types/Student';
 
 export default function EvaluationStartScreen() {
-  const [allStudents, setAllStudents] = useState<Student[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);  
+  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState('');
   const [selectedStudentName, setSelectedStudentName] = useState('Selecione um aluno');
   const [password, setPassword] = useState('');
@@ -47,9 +44,16 @@ export default function EvaluationStartScreen() {
           Alert.alert('Erro', 'ID do responsável não encontrado.');
           return;
         }
+  
         const studentsData: Student[] = await getStudentsByParent(parentId);
-        setAllStudents(studentsData);
-        setStudents(studentsData);
+        if (studentsData.length === 0) {
+          Alert.alert('Erro', 'Nenhum estudante encontrado para este responsável.');
+          return;
+        }
+  
+        const sortedStudents = studentsData.sort((a, b) => a.name.localeCompare(b.name));
+  
+        setStudents(sortedStudents);
       } catch (error) {
         console.log('[Início da Avaliação] Erro ao buscar alunos:', error);
         Alert.alert('Erro', 'Erro ao carregar os alunos.');
@@ -57,30 +61,17 @@ export default function EvaluationStartScreen() {
         setLoading(false);
       }
     };
-
+  
     fetchStudents();
-  }, []);
+  }, []);  
 
-  const handleStudentSelection = (studentId: string, studentName: string) => {
+  const handleStudentSelection = async (studentId: string, studentName: string, classLevel: string) => {
     setSelectedStudent(studentId);
     setSelectedStudentName(studentName);
     setModalVisible(false);
-  };
 
-  const showPickerIOS = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: ['Cancelar', ...students.map((s) => s.name)],
-        cancelButtonIndex: 0,
-      },
-      (buttonIndex) => {
-        if (buttonIndex !== 0) {
-          const selectedStudent = students[buttonIndex - 1];
-          setSelectedStudent(selectedStudent.id);
-          setSelectedStudentName(selectedStudent.name);
-        }
-      }
-    );
+    await AsyncStorage.setItem('classLevel', classLevel);
+    console.log(`[Storage] Class Level salvo: ${classLevel}`);
   };
 
   const handleContinue = async () => {
@@ -88,19 +79,18 @@ export default function EvaluationStartScreen() {
       Alert.alert('Erro', 'Selecione um aluno e insira a senha do responsável.');
       return;
     }
-  
+
     try {
       const parentId = await AsyncStorage.getItem('userId');
       if (!parentId) {
         Alert.alert('Erro', 'ID do responsável não encontrado.');
         return;
       }
-  
+
       const { isValid, message } = await validateParentPassword(parentId, password);
-  
+
       if (isValid) {
-        //Alert.alert('Sucesso', message);
-        router.push(`/welcome`);
+        router.push('/quiz');
       } else {
         Alert.alert('Erro', message);
       }
@@ -121,7 +111,7 @@ export default function EvaluationStartScreen() {
           <Text style={styles.sectionText}>1. Identifique o aluno que será avaliado:</Text>
           <TouchableOpacity
             style={styles.pickerButton}
-            onPress={Platform.OS === 'ios' ? showPickerIOS : () => setModalVisible(true)}
+            onPress={() => setModalVisible(true)}
           >
             <Text style={styles.pickerButtonText}>{selectedStudentName}</Text>
             <Ionicons name="chevron-down-outline" size={20} color="#333" />
@@ -130,14 +120,16 @@ export default function EvaluationStartScreen() {
           <Modal visible={isModalVisible} transparent animationType="slide">
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Selecione um aluno</Text>
                 <FlatList
                   data={students}
                   keyExtractor={(item) => item.id}
+                  style={styles.flatList}  // 🔹 Aplicando altura máxima e rolagem
+                  contentContainerStyle={{ flexGrow: 1 }}
+                  showsVerticalScrollIndicator={true}  // 🔹 Exibe a barra de rolagem
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={styles.modalItem}
-                      onPress={() => handleStudentSelection(item.id, item.name)}
+                      onPress={() => handleStudentSelection(item.id, item.name, item.className)}
                     >
                       <Text style={styles.modalItemText}>{item.name}</Text>
                     </TouchableOpacity>
@@ -153,18 +145,13 @@ export default function EvaluationStartScreen() {
           <Text style={styles.sectionText}>2. Use a senha do responsável para iniciar</Text>
           <TextInput
             placeholder="Senha"
-            placeholderTextColor="#888888"
             secureTextEntry
             style={styles.input}
             value={password}
             onChangeText={setPassword}
           />
 
-          <TouchableOpacity
-            style={[styles.continueButton, (!selectedStudent || !password) && styles.buttonDisabled]}
-            disabled={!selectedStudent || !password}
-            onPress={handleContinue}
-          >
+          <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
         </View>
@@ -231,9 +218,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  buttonDisabled: {
-    backgroundColor: '#A0AEC0',
-  },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
@@ -250,11 +234,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 20,
+    maxHeight: '60%',  // 🔹 Limita a altura para evitar que o botão "Cancelar" suma
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  flatList: {
+    maxHeight: 200,  // 🔹 Define a altura máxima antes de ativar o scroll
   },
   modalItem: {
     padding: 15,
@@ -266,15 +249,14 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   closeButton: {
-    marginTop: 10,
     padding: 10,
     backgroundColor: '#DDDDDD',
     borderRadius: 5,
     alignItems: 'center',
+    marginTop: 10,
   },
   closeButtonText: {
     color: '#333',
     fontSize: 16,
   },
 });
-

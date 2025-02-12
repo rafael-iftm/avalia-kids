@@ -1,22 +1,25 @@
-import { View, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, StyleSheet, ActivityIndicator, Alert, Text } from 'react-native';
 import Header from '../../components/Header';
 import QuestionCard from '../../components/ui/QuestionCard';
 import AnswerButton from '../../components/ui/AnswerButton';
-import { useState } from 'react';
-import quizData from '../../data/quizData';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getQuestionsByClassLevel } from '@/services/questionService';
+import { Question } from '@/types/Question';
 
 export default function QuizScreen() {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [disabledOptions, setDisabledOptions] = useState<string[]>([]);
-  const totalQuestions = quizData.length;
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -24,33 +27,74 @@ export default function QuizScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const question = quizData[currentQuestionIndex];
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const classLevel = await AsyncStorage.getItem('classLevel');
+        if (!classLevel) {
+          Alert.alert('Erro', 'Não foi possível determinar o nível da turma.');
+          return;
+        }
+
+        console.log(`[Quiz] Buscando questões para: ${classLevel}`);
+        const fetchedQuestions = await getQuestionsByClassLevel(classLevel);
+
+        if (!fetchedQuestions || fetchedQuestions.length === 0) {
+          Alert.alert('Erro', 'Nenhuma questão disponível para esta turma.');
+          return;
+        }
+
+        setQuestions(fetchedQuestions);
+      } catch (error) {
+        console.error('[Quiz] Erro ao buscar questões:', error);
+        Alert.alert('Erro', 'Erro ao carregar as questões.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#1B3C87" style={styles.loader} />;
+  }
+
+  if (questions.length === 0) {
+    return (
+      <View style={styles.container}>
+        <CustomHeaderBar title="Avaliação" />
+        <Text style={styles.errorText}>Nenhuma questão disponível para sua turma.</Text>
+      </View>
+    );
+  }
+
+  const totalQuestions = questions.length;
+  const question = questions[currentQuestionIndex];
 
   const handleAnswerPress = (option: string) => {
     setSelectedAnswer(option);
 
-    if (option === question.correct) {
+    if (option === question.correctOption) {
       setShowConfetti(true);
     } else {
       setDisabledOptions([...disabledOptions, option]);
     }
-  
-    if (option === question.correct) {
+
+    if (option === question.correctOption) {
       setShowConfetti(true);
       setTimeout(() => {
-        if (option === question.correct) {
-          setShowConfetti(false);
-          if (currentQuestionIndex < totalQuestions - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedAnswer(null);
-            setDisabledOptions([]);
-          } else {
-            router.replace('/evaluationEnd');
-          }
+        setShowConfetti(false);
+        if (currentQuestionIndex < totalQuestions - 1) {
+          setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+          setSelectedAnswer(null);
+          setDisabledOptions([]);
+        } else {
+          router.replace('/evaluationEnd');
         }
       }, 1500);
-    };
-};
+    }
+  };
 
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
@@ -61,7 +105,7 @@ export default function QuizScreen() {
         leftIcon={{ name: 'arrow-back-outline', route: routes.welcome }}
       />
       <View style={styles.content}>
-      {/* Header com o progresso */}
+        {/* Header com o progresso */}
         <Header
           title={`Pergunta ${currentQuestionIndex + 1}`}
           progress={progress}
@@ -70,10 +114,7 @@ export default function QuizScreen() {
         />
 
         {/* Imagem central associada à pergunta */}
-        <Image
-          source={question.image}
-          style={styles.image}
-        />
+        <Image source={{ uri: question.imageUrl }} style={styles.image} />
 
         {/* Pergunta */}
         <QuestionCard question={question.text} />
@@ -85,9 +126,9 @@ export default function QuizScreen() {
             label={option}
             onPress={() => !disabledOptions.includes(option) && handleAnswerPress(option)}
             style={
-              selectedAnswer === option && option === question.correct
+              selectedAnswer === option && option === question.correctOption
                 ? styles.correctButton
-                : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correct)
+                : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correctOption)
                 ? styles.incorrectButton
                 : {}
             }
@@ -132,5 +173,16 @@ const styles = StyleSheet.create({
   incorrectButton: {
     backgroundColor: '#A0AEC0',
     opacity: 0.4,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
