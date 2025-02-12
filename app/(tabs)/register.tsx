@@ -95,7 +95,7 @@ export default function RegisterScreen() {
       const response = await registerUser(name, email, password, role);
       console.log('[Register] Registro bem-sucedido. Resposta do backend:', response);
   
-      Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
+      // Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
       router.push('/login');
     } catch (error) {
       console.log('[Register] Erro durante o registro:', error);

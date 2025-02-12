@@ -124,7 +124,7 @@ export default function StudentRegistrationScreen() {
       const response = await registerStudent(studentName, birthDate, token, parentId);
   
       console.log('[Registro de Aluno] Resposta do backend:', response);
-      Alert.alert('Sucesso', 'Aluno cadastrado com sucesso!');
+      // Alert.alert('Sucesso', 'Aluno cadastrado com sucesso!');
       setModalVisible(false);
       router.push('/home');
     } catch (error) {
