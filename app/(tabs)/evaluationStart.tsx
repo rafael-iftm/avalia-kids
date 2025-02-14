@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import { getStudentsByParent } from '@/services/studentService';
@@ -31,6 +31,8 @@ export default function EvaluationStartScreen() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const navigation = useNavigation();
+  const { preSelectedStudentId, preSelectedStudentName, preSelectedClassLevel } =
+    useLocalSearchParams<{ preSelectedStudentId?: string; preSelectedStudentName?: string; preSelectedClassLevel?: string }>();
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -39,21 +41,31 @@ export default function EvaluationStartScreen() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        setLoading(true);
         const parentId = await AsyncStorage.getItem('userId');
         if (!parentId) {
           Alert.alert('Erro', 'ID do responsável não encontrado.');
           return;
         }
-  
+
         const studentsData: Student[] = await getStudentsByParent(parentId);
         if (studentsData.length === 0) {
           Alert.alert('Erro', 'Nenhum estudante encontrado para este responsável.');
           return;
         }
-  
+
         const sortedStudents = studentsData.sort((a, b) => a.name.localeCompare(b.name));
-  
+
         setStudents(sortedStudents);
+
+        if (preSelectedStudentId && preSelectedStudentName && preSelectedClassLevel) {
+          setSelectedStudent(preSelectedStudentId);
+          setSelectedStudentName(preSelectedStudentName);
+          await AsyncStorage.setItem('classLevel', preSelectedClassLevel);
+        } else {
+          setSelectedStudent('');
+          setSelectedStudentName('Selecione um aluno');
+        }
       } catch (error) {
         console.log('[Início da Avaliação] Erro ao buscar alunos:', error);
         Alert.alert('Erro', 'Erro ao carregar os alunos.');
@@ -61,9 +73,9 @@ export default function EvaluationStartScreen() {
         setLoading(false);
       }
     };
-  
+
     fetchStudents();
-  }, []);  
+  }, [preSelectedStudentId, preSelectedStudentName, preSelectedClassLevel]);
 
   const handleStudentSelection = async (studentId: string, studentName: string, classLevel: string) => {
     setSelectedStudent(studentId);
@@ -123,9 +135,9 @@ export default function EvaluationStartScreen() {
                 <FlatList
                   data={students}
                   keyExtractor={(item) => item.id}
-                  style={styles.flatList}  // 🔹 Aplicando altura máxima e rolagem
+                  style={styles.flatList}
                   contentContainerStyle={{ flexGrow: 1 }}
-                  showsVerticalScrollIndicator={true}  // 🔹 Exibe a barra de rolagem
+                  showsVerticalScrollIndicator={true}
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={styles.modalItem}

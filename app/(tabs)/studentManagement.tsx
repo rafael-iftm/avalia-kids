@@ -79,6 +79,17 @@ export default function StudentManagementScreen() {
     setStudents(sortStudents(allStudents, newSortBy));
   };
 
+  const handleEvaluate = (student: Student) => {
+    router.push({
+      pathname: "/evaluationStart",
+      params: {
+        preSelectedStudentId: student.id,
+        preSelectedStudentName: student.name,
+        preSelectedClassLevel: student.className,
+      },
+    });
+  };
+
   const confirmRegistration = async () => {
     try {
       console.log("[Registro de Aluno] Iniciando o processo de registro do aluno...");
@@ -104,7 +115,6 @@ export default function StudentManagementScreen() {
       setConfirmationVisible(false);
       setModalVisible(false);
       
-      // Alert.alert("Sucesso", "Aluno cadastrado com sucesso!");
     } catch (error) {
       console.log("[Registro de Aluno] Erro durante o registro:", error);
 
@@ -136,7 +146,7 @@ export default function StudentManagementScreen() {
           data={students}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <StudentItem student={item} onEvaluate={() => router.push("/quiz")} />
+            <StudentItem student={item} onEvaluate={() => handleEvaluate(item)} />
           )}
           ListHeaderComponent={
             <StudentListHeader
