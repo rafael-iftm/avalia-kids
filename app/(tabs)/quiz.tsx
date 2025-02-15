@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator, Alert, Text } from 'react-native';
-import Header from '../../components/Header';
-import QuestionCard from '../../components/ui/QuestionCard';
-import AnswerButton from '../../components/ui/AnswerButton';
-import { useRouter } from 'expo-router';
-import { useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import ConfettiCannon from 'react-native-confetti-cannon';
-import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
-import { routes } from '@/routes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getQuestionsByClassLevel } from '@/services/questionService';
-import { Question } from '@/types/Question';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  Text,
+} from "react-native";
+import Header from "../../components/Header";
+import QuestionCard from "../../components/ui/QuestionCard";
+import AnswerButton from "../../components/ui/AnswerButton";
+import { useRouter } from "expo-router";
+import { useNavigation } from "expo-router";
+import { useLayoutEffect } from "react";
+import ConfettiCannon from "react-native-confetti-cannon";
+import CustomHeaderBar from "@/components/ui/CustomHeaderBar";
+import { routes } from "@/routes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getQuestionsByClassLevel } from "@/services/questionService";
+import { Question } from "@/types/Question";
+import { submitAnswer } from "@/services/quizService";
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -20,6 +28,10 @@ export default function QuizScreen() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [disabledOptions, setDisabledOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [studentId, setStudentId] = useState<string | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState<
+    Record<string, boolean>
+  >({}); // 🔹 Guarda quais questões já foram registradas no back-end
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -30,24 +42,28 @@ export default function QuizScreen() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const classLevel = await AsyncStorage.getItem('classLevel');
-        if (!classLevel) {
-          Alert.alert('Erro', 'Não foi possível determinar o nível da turma.');
+        const classLevel = await AsyncStorage.getItem("classLevel");
+        const storedStudentId = await AsyncStorage.getItem("selectedStudentId");
+
+        if (!classLevel || !storedStudentId) {
+          Alert.alert("Erro", "Informações do aluno ou nível da turma não encontradas.");
           return;
         }
 
         console.log(`[Quiz] Buscando questões para: ${classLevel}`);
-        const fetchedQuestions = await getQuestionsByClassLevel(classLevel);
+        setStudentId(storedStudentId);
+
+        const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim());
 
         if (!fetchedQuestions || fetchedQuestions.length === 0) {
-          Alert.alert('Erro', 'Nenhuma questão disponível para esta turma.');
+          Alert.alert("Erro", "Nenhuma questão disponível para esta turma.");
           return;
         }
 
         setQuestions(fetchedQuestions);
       } catch (error) {
-        console.log('[Quiz] Erro ao buscar questões:', error);
-        Alert.alert('Erro', 'Erro ao carregar as questões.');
+        console.log("[Quiz] Erro ao buscar questões:", error);
+        Alert.alert("Erro", "Erro ao carregar as questões.");
       } finally {
         setLoading(false);
       }
@@ -55,6 +71,34 @@ export default function QuizScreen() {
 
     fetchQuestions();
   }, []);
+
+  const submitAnswerToAPI = async (questionId: string, selectedOption: string) => {
+    if (!studentId) {
+      console.log("[Quiz] ID do estudante não encontrado.");
+      return;
+    }
+
+    if (answeredQuestions[questionId]) {
+      console.log("[Quiz] Resposta já registrada, não será enviada novamente.");
+      return;
+    }
+
+    try {
+      console.log(`[Quiz] Enviando resposta para API:
+        Student ID: ${studentId},
+        Questão: ${questionId},
+        Resposta: ${selectedOption}`);
+
+      await submitAnswer(studentId, questionId, selectedOption);
+
+      setAnsweredQuestions((prev) => ({
+        ...prev,
+        [questionId]: true, // 🔹 Marca a questão como já enviada ao back-end
+      }));
+    } catch (error) {
+      console.log("[Quiz] Erro ao enviar resposta:", error);
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#1B3C87" style={styles.loader} />;
@@ -74,12 +118,7 @@ export default function QuizScreen() {
 
   const handleAnswerPress = (option: string) => {
     setSelectedAnswer(option);
-
-    if (option === question.correctOption) {
-      setShowConfetti(true);
-    } else {
-      setDisabledOptions([...disabledOptions, option]);
-    }
+    submitAnswerToAPI(question.id, option);
 
     if (option === question.correctOption) {
       setShowConfetti(true);
@@ -90,9 +129,11 @@ export default function QuizScreen() {
           setSelectedAnswer(null);
           setDisabledOptions([]);
         } else {
-          router.replace('/evaluationEnd');
+          router.replace("/evaluationEnd");
         }
       }, 1500);
+    } else {
+      setDisabledOptions([...disabledOptions, option]);
     }
   };
 
@@ -102,10 +143,9 @@ export default function QuizScreen() {
     <View style={styles.container}>
       <CustomHeaderBar
         title="Avaliação"
-        leftIcon={{ name: 'arrow-back-outline', route: routes.welcome }}
+        leftIcon={{ name: "arrow-back-outline", route: routes.welcome }}
       />
       <View style={styles.content}>
-        {/* Header com o progresso */}
         <Header
           title={`Pergunta ${currentQuestionIndex + 1}`}
           progress={progress}
@@ -113,13 +153,10 @@ export default function QuizScreen() {
           totalQuestions={totalQuestions}
         />
 
-        {/* Imagem central associada à pergunta */}
         <Image source={{ uri: question.imageUrl }} style={styles.image} />
 
-        {/* Pergunta */}
         <QuestionCard question={question.text} />
 
-        {/* Botões de Resposta */}
         {question.options.map((option, index) => (
           <AnswerButton
             key={index}
@@ -128,14 +165,14 @@ export default function QuizScreen() {
             style={
               selectedAnswer === option && option === question.correctOption
                 ? styles.correctButton
-                : disabledOptions.includes(option) || (selectedAnswer === option && option !== question.correctOption)
+                : disabledOptions.includes(option) ||
+                  (selectedAnswer === option && option !== question.correctOption)
                 ? styles.incorrectButton
                 : {}
             }
           />
         ))}
 
-        {/* Animação de confetes */}
         {showConfetti && (
           <ConfettiCannon
             count={200}
