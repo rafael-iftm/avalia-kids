@@ -82,9 +82,12 @@ export default function EvaluationStartScreen() {
     setSelectedStudentName(studentName);
     setModalVisible(false);
 
+    await AsyncStorage.setItem('selectedStudentId', studentId);
     await AsyncStorage.setItem('classLevel', classLevel);
+
+    console.log(`[Storage] Student ID salvo: ${studentId}`);
     console.log(`[Storage] Class Level salvo: ${classLevel}`);
-  };
+};
 
   const handleContinue = async () => {
     if (selectedStudent.trim() === '' || password.trim() === '') {

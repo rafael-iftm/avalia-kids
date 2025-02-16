@@ -41,36 +41,39 @@ export default function QuizScreen() {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      try {
-        const classLevel = await AsyncStorage.getItem("classLevel");
-        const storedStudentId = await AsyncStorage.getItem("selectedStudentId");
+        try {
+            const classLevel = await AsyncStorage.getItem("classLevel");
+            const storedStudentId = await AsyncStorage.getItem("selectedStudentId");
 
-        if (!classLevel || !storedStudentId) {
-          Alert.alert("Erro", "Informações do aluno ou nível da turma não encontradas.");
-          return;
+            if (!classLevel || !storedStudentId) {
+                Alert.alert("Erro", "Informações do aluno ou nível da turma não encontradas.");
+                return;
+            }
+
+            console.log(`[Quiz] Buscando questões para: ${classLevel}`);
+            console.log(`[Quiz] ID do estudante carregado: ${storedStudentId}`);
+
+            setStudentId(storedStudentId);
+
+            const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim());
+
+            if (!fetchedQuestions || fetchedQuestions.length === 0) {
+                Alert.alert("Erro", "Nenhuma questão disponível para esta turma.");
+                return;
+            }
+
+            setQuestions(fetchedQuestions);
+        } catch (error) {
+            console.log("[Quiz] Erro ao buscar questões:", error);
+            Alert.alert("Erro", "Erro ao carregar as questões.");
+        } finally {
+            setLoading(false);
         }
-
-        console.log(`[Quiz] Buscando questões para: ${classLevel}`);
-        setStudentId(storedStudentId);
-
-        const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim());
-
-        if (!fetchedQuestions || fetchedQuestions.length === 0) {
-          Alert.alert("Erro", "Nenhuma questão disponível para esta turma.");
-          return;
-        }
-
-        setQuestions(fetchedQuestions);
-      } catch (error) {
-        console.log("[Quiz] Erro ao buscar questões:", error);
-        Alert.alert("Erro", "Erro ao carregar as questões.");
-      } finally {
-        setLoading(false);
-      }
     };
 
     fetchQuestions();
-  }, []);
+}, []);
+
 
   const submitAnswerToAPI = async (questionId: string, selectedOption: string) => {
     if (!studentId) {

@@ -79,17 +79,28 @@ export default function StudentManagementScreen() {
     setStudents(sortStudents(allStudents, newSortBy));
   };
 
-  const handleEvaluate = (student: Student) => {
-    router.push({
-      pathname: "/evaluationStart",
-      params: {
-        preSelectedStudentId: student.id,
-        preSelectedStudentName: student.name,
-        preSelectedClassLevel: student.className,
-      },
-    });
+  const handleEvaluate = async (student: Student) => {
+    try {
+      await AsyncStorage.setItem('selectedStudentId', student.id);
+      await AsyncStorage.setItem('classLevel', student.className);
+  
+      console.log(`[Storage] Student ID salvo: ${student.id}`);
+      console.log(`[Storage] Class Level salvo: ${student.className}`);
+  
+      router.push({
+        pathname: "/evaluationStart",
+        params: {
+          preSelectedStudentId: student.id,
+          preSelectedStudentName: student.name,
+          preSelectedClassLevel: student.className,
+        },
+      });
+    } catch (error) {
+      console.log("[Gerenciamento de Alunos] Erro ao armazenar aluno selecionado:", error);
+      Alert.alert("Erro", "Não foi possível iniciar a avaliação.");
+    }
   };
-
+  
   const confirmRegistration = async () => {
     try {
       console.log("[Registro de Aluno] Iniciando o processo de registro do aluno...");
