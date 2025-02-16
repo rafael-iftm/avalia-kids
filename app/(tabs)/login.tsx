@@ -171,9 +171,9 @@ export default function LoginScreen() {
             <TouchableOpacity onPress={() => router.push('/register')}>
               <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/forgotPassword')}>
-              <Text style={styles.linkText}>Esqueceu sua senha?</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => router.push('/forgotPassword')}>
+              <Text style={styles.linkText}>Esqueceu sua senha? [REMOVER NA V2]</Text>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

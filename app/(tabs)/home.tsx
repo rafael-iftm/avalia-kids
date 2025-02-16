@@ -37,7 +37,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <CustomHeaderBar
         title="Menu"
-        leftIcon={{ name: 'settings-outline', route: routes.settings }}
+        //leftIcon={{ name: 'settings-outline', route: routes.settings }} [REMOVER NA V2]
         rightIcon={{ name: 'log-out-outline', route: routes.login }}
       />
 

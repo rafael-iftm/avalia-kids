@@ -140,7 +140,7 @@ export default function StudentRegistrationScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <CustomHeaderBar
-          leftIcon={{ name: 'settings-outline', route: routes.settings }}
+          //leftIcon={{ name: 'settings-outline', route: routes.settings }} [REMOVER NA V2]
           rightIcon={{ name: 'log-out-outline', route: routes.login }}
         />
 
