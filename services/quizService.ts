@@ -56,3 +56,25 @@ export const getStudentResults = async (studentId: string) => {
     throw error;
   }
 };
+
+export const fetchStudentResults = async (studentId: string, token: string) => {
+  try {
+    const response = await api.get(`/quiz/results/${studentId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("[Quiz] Erro ao buscar resultados do aluno:", error);
+    return [];
+  }
+};
+
+export const fetchTotalQuestions = async (classLevel: string) => {
+  try {
+    const response = await api.get(`/questions/${classLevel}`);
+    return response.data.length;
+  } catch (error) {
+    console.error("[Quiz] Erro ao buscar total de perguntas:", error);
+    return 0;
+  }
+};

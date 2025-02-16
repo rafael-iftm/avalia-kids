@@ -5,16 +5,20 @@ import { Student } from '../../types/Student';
 interface StudentItemProps {
   student: Student;
   onEvaluate: () => void;
+  totalQuestions?: number;
 }
 
-const StudentItem: React.FC<StudentItemProps> = ({ student, onEvaluate }) => {
+const StudentItem: React.FC<StudentItemProps> = ({ student, onEvaluate, totalQuestions }) => {
+  const hasCompletedQuiz = totalQuestions && student.score !== null;
+
   return (
     <View style={styles.studentRow}>
       <Text style={[styles.studentCell, styles.studentCellName]}>{student.name}</Text>
       <Text style={[styles.studentCell, styles.studentCellGrade]}>{student.className}</Text>
-      {student.score !== null ? (
+
+      {hasCompletedQuiz ? (
         <Text style={[styles.studentCell, styles.studentCellScore]}>
-          {student.score}/10
+          {student.score}/{totalQuestions}
         </Text>
       ) : (
         <TouchableOpacity style={styles.evaluateButton} onPress={onEvaluate}>
@@ -24,6 +28,7 @@ const StudentItem: React.FC<StudentItemProps> = ({ student, onEvaluate }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   studentRow: {

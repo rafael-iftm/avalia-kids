@@ -13,6 +13,7 @@ import { useNavigation, useRouter } from "expo-router";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ActivityIndicator, Alert, FlatList, Keyboard, StyleSheet } from "react-native";
 import axios from "axios";
+import { fetchStudentResults, fetchTotalQuestions } from "@/services/quizService";
 
 type SortBy = "alfabetica" | "turma";
 
@@ -42,17 +43,35 @@ export default function StudentManagementScreen() {
     try {
       setLoading(true);
       const parentId = await AsyncStorage.getItem("userId");
-      if (!parentId) {
-        Alert.alert("Erro", "ID do responsável não encontrado.");
+      const token = await getAuthToken();
+  
+      if (!parentId || !token) {
+        Alert.alert("Erro", "ID do responsável ou autenticação inválida.");
         return;
       }
+  
       const studentsData = await getStudentsByParent(parentId);
-
-      // 🔹 Ordenação alfabética por nome
-      const sortedStudents = [...studentsData].sort((a, b) =>
+  
+      const updatedStudents = await Promise.all(
+        studentsData.map(async (student: Student) => {
+          const totalQuestions = await fetchTotalQuestions(student.className);
+          const studentResults = await fetchStudentResults(student.id, token);
+  
+          // Conta quantas respostas foram corretas
+          const correctAnswers = studentResults.filter((answer: any) => answer.correct).length;
+  
+          // 🔹 Define se o aluno completou o quiz
+          const hasCompletedQuiz = studentResults.length === totalQuestions;
+  
+          return { ...student, totalQuestions, score: hasCompletedQuiz ? correctAnswers : null };
+        })
+      );
+  
+      // 🔹 Ordenação alfabética
+      const sortedStudents = updatedStudents.sort((a, b) =>
         a.name.localeCompare(b.name, "pt-BR", { sensitivity: "base" })
       );
-
+  
       setAllStudents(sortedStudents);
       setStudents(sortedStudents);
     } catch (error) {
@@ -61,7 +80,7 @@ export default function StudentManagementScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -157,7 +176,11 @@ export default function StudentManagementScreen() {
           data={students}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <StudentItem student={item} onEvaluate={() => handleEvaluate(item)} />
+            <StudentItem 
+              student={item} 
+              onEvaluate={() => handleEvaluate(item)} 
+              totalQuestions={item.totalQuestions} 
+            />
           )}
           ListHeaderComponent={
             <StudentListHeader

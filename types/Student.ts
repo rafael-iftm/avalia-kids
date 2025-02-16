@@ -5,4 +5,5 @@ export interface Student {
   className: string;
   parentId: string;
   score: number | null;
+  totalQuestions?: number;
 }
