@@ -21,6 +21,9 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '@/types/Student';
+import axios from 'axios';
+import { getAuthToken } from '@/utils/auth';
+import { fetchStudentResults, fetchTotalQuestions } from '@/services/quizService';
 
 export default function EvaluationStartScreen() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -37,46 +40,63 @@ export default function EvaluationStartScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
-
+  
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchStudentsToEvaluate = async () => {
       try {
         setLoading(true);
         const parentId = await AsyncStorage.getItem('userId');
+        const token = await getAuthToken();
+  
         if (!parentId) {
           Alert.alert('Erro', 'ID do responsável não encontrado.');
           return;
         }
-
-        const studentsData: Student[] = await getStudentsByParent(parentId);
-        if (studentsData.length === 0) {
+  
+        if (!token) {
+          Alert.alert('Erro', 'Usuário não autenticado.');
+          return;
+        }
+  
+        const studentsData = await getStudentsByParent(parentId);
+  
+        if (!studentsData || studentsData.length === 0) {
           Alert.alert('Erro', 'Nenhum estudante encontrado para este responsável.');
           return;
         }
-
-        const sortedStudents = studentsData.sort((a, b) => a.name.localeCompare(b.name));
-
-        setStudents(sortedStudents);
-
-        if (preSelectedStudentId && preSelectedStudentName && preSelectedClassLevel) {
-          setSelectedStudent(preSelectedStudentId);
-          setSelectedStudentName(preSelectedStudentName);
-          await AsyncStorage.setItem('classLevel', preSelectedClassLevel);
-        } else {
-          setSelectedStudent('');
-          setSelectedStudentName('Selecione um aluno');
+  
+        const studentsToEvaluate: Student[] = [];
+  
+        for (const student of studentsData) {
+          try {
+            const totalQuestions = await fetchTotalQuestions(student.className);
+            const answeredQuestions = await fetchStudentResults(student.id, token);
+  
+            if (answeredQuestions.length < totalQuestions) {
+              studentsToEvaluate.push(student);
+            }
+          } catch (error) {
+            console.error(`[ERRO] Falha ao obter dados do aluno ${student.name}:`, error);
+            studentsToEvaluate.push(student);
+          }
         }
+  
+        if (studentsToEvaluate.length === 0) {
+          Alert.alert('Aviso', 'Todos os alunos já realizaram a avaliação.');
+        }
+  
+        setStudents(studentsToEvaluate);
       } catch (error) {
-        console.log('[Início da Avaliação] Erro ao buscar alunos:', error);
-        Alert.alert('Erro', 'Erro ao carregar os alunos.');
+        console.error('[ERRO] Falha ao buscar alunos:', error);
+        Alert.alert('Erro', 'Não foi possível carregar os alunos.');
       } finally {
         setLoading(false);
       }
     };
-
-    fetchStudents();
-  }, [preSelectedStudentId, preSelectedStudentName, preSelectedClassLevel]);
-
+  
+    fetchStudentsToEvaluate();
+  }, []);
+  
   const handleStudentSelection = async (studentId: string, studentName: string, classLevel: string) => {
     setSelectedStudent(studentId);
     setSelectedStudentName(studentName);
