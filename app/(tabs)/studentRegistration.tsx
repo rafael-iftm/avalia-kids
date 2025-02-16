@@ -147,7 +147,7 @@ export default function StudentRegistrationScreen() {
         <View style={styles.content}>
           <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
           <Text style={styles.instructions}>
-            Antes de realizar alguma avaliação, você deve cadastrar os alunos que serão avaliados:
+            Antes de realizar alguma avaliação, você deve cadastrar ao menos um aluno para continuar:
           </Text>
 
           <TextInput

@@ -18,7 +18,7 @@ export default function HomeScreen() {
       <View style={styles.content}>
           {/* Imagem do logo */}
         <Image
-          source={require('../../assets/images/logo.png')}
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/logo.png?alt=media'}}
           style={styles.logo}
         />
 
@@ -27,7 +27,7 @@ export default function HomeScreen() {
 
         {/* Mascote */}
         <Image
-          source={require('../../assets/images/mascote.png')}
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
           style={styles.mascot}
         />
 

@@ -46,7 +46,7 @@ export default function HomeScreen() {
         <Text style={styles.question}>O que deseja fazer?</Text>
 
         <Image
-          source={require('../../assets/images/mascote.png')}
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
           style={styles.mascotImage}
           resizeMode="contain"
         />
@@ -56,7 +56,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/studentManagement')}
         >
           <Image
-            source={require('../../assets/images/students-icon.png')}
+            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/students-icon.png?alt=media'}}
             style={styles.iconImage}
           />
           <Text style={styles.buttonText}>Gerenciar Alunos</Text>
@@ -67,7 +67,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/evaluationStart')}
         >
           <Image
-            source={require('../../assets/images/evaluation-icon.png')}
+            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media'}}
             style={styles.iconImage}
           />
           <Text style={styles.buttonText}>Realizar Avaliações</Text>

@@ -50,7 +50,7 @@ export default function WelcomeScreen() {
       <View style={styles.content}>
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
-          source={require('../../assets/images/mascote.png')}
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
           style={styles.mascotImage}
           resizeMode="contain"
         />

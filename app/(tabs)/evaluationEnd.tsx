@@ -23,7 +23,7 @@ export default function EvaluationEndScreen() {
       <View style={styles.content}>
         {/* Imagem do foguete */}
         <Image
-          source={require('@/assets/images/rocket.png')} // Ajuste o caminho conforme necessário
+          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/rocket.png?alt=media'}}
           style={styles.rocketImage}
           resizeMode="contain"
         />
