@@ -2,7 +2,7 @@ import axios from "axios";
 import api from '../utils/api';
 
 export const registerUser = async (name: string, email: string, password: string, role: string) => {
-  const response = await api.post('/auth/register', {
+  const response = await api.post('/auth-service/auth/register', {
     name,
     email,
     password,
@@ -12,7 +12,7 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const response = await api.post('/auth/login', null, {
+  const response = await api.post('/auth-service/auth/login', null, {
     params: {
       email,
       password,
@@ -23,7 +23,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const validateParentPassword = async (parentId: string, password: string) => {
   try {
-    const response = await api.post(`/auth/validate-password`, { parentId, password });
+    const response = await api.post(`/auth-service/auth/validate-password`, { parentId, password });
 
     return { isValid: response.data.isValid, message: "Senha correta! Acesso liberado." };
   } catch (error: unknown) {

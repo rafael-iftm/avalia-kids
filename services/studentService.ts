@@ -2,7 +2,7 @@ import { getAuthToken } from '@/utils/auth';
 import api from '../utils/api';
 
 export const registerStudent = async (name: string, birthDate: string, token: string, parentId: string) => {
-  const response = await api.post('/students/register', null, {
+  const response = await api.post('/student-service/students/register', null, {
     params: {
       name,
       birthDate,
@@ -26,7 +26,7 @@ export const getStudentsByParent = async (parentId: string) => {
       throw new Error('Token JWT não encontrado.');
     }
 
-    const response = await api.get(`/students/by-parent/${parentId}`, {
+    const response = await api.get(`/student-service/students/by-parent/${parentId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

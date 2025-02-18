@@ -10,12 +10,12 @@ export const submitAnswer = async (
   try {
     const token = await getAuthToken();
     if (!token) {
-      console.error("[Quiz] Erro: Token de autenticação não encontrado.");
+      console.log("[Quiz] Erro: Token de autenticação não encontrado.");
       throw new Error("Usuário não autenticado.");
     }
 
     const response = await api.post(
-      "/quiz/submit",
+      "/quiz-service/quiz/submit",
       {
         studentId,
         questionId,
@@ -30,7 +30,7 @@ export const submitAnswer = async (
 
     return response.data;
   } catch (error) {
-    console.error("[Quiz] Erro ao enviar resposta:", error);
+    console.log("[Quiz] Erro ao enviar resposta:", error);
     throw error;
   }
 };
@@ -40,11 +40,11 @@ export const getStudentResults = async (studentId: string) => {
   try {
     const token = await getAuthToken();
     if (!token) {
-      console.error("[Quiz] Erro: Token de autenticação não encontrado.");
+      console.log("[Quiz] Erro: Token de autenticação não encontrado.");
       throw new Error("Usuário não autenticado.");
     }
 
-    const response = await api.get(`/quiz/results/${studentId}`, {
+    const response = await api.get(`/quiz-service/quiz/results/${studentId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,29 +52,29 @@ export const getStudentResults = async (studentId: string) => {
 
     return response.data;
   } catch (error) {
-    console.error("[Quiz] Erro ao buscar resultados:", error);
+    console.log("[Quiz] Erro ao buscar resultados:", error);
     throw error;
   }
 };
 
 export const fetchStudentResults = async (studentId: string, token: string) => {
   try {
-    const response = await api.get(`/quiz/results/${studentId}`, {
+    const response = await api.get(`/quiz-service/results/${studentId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   } catch (error) {
-    console.error("[Quiz] Erro ao buscar resultados do aluno:", error);
+    console.log("[Quiz] Erro ao buscar resultados do aluno:", error);
     return [];
   }
 };
 
 export const fetchTotalQuestions = async (classLevel: string) => {
   try {
-    const response = await api.get(`/questions/${classLevel}`);
+    const response = await api.get(`/question-service/questions/${classLevel}`);
     return response.data.length;
   } catch (error) {
-    console.error("[Quiz] Erro ao buscar total de perguntas:", error);
+    console.log("[Quiz] Erro ao buscar total de perguntas:", error);
     return 0;
   }
 };

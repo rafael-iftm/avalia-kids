@@ -76,7 +76,7 @@ export default function EvaluationStartScreen() {
               studentsToEvaluate.push(student);
             }
           } catch (error) {
-            console.error(`[ERRO] Falha ao obter dados do aluno ${student.name}:`, error);
+            console.log(`[ERRO] Falha ao obter dados do aluno ${student.name}:`, error);
             studentsToEvaluate.push(student);
           }
         }
@@ -87,7 +87,7 @@ export default function EvaluationStartScreen() {
   
         setStudents(studentsToEvaluate);
       } catch (error) {
-        console.error('[ERRO] Falha ao buscar alunos:', error);
+        console.log('[ERRO] Falha ao buscar alunos:', error);
         Alert.alert('Erro', 'Não foi possível carregar os alunos.');
       } finally {
         setLoading(false);
