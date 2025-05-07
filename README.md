@@ -48,16 +48,41 @@ docker-compose up --build
 
 ### 🔹 3. Subir o Frontend
 
-```bash
-cd frontend
-npm install --legacy-peer-deps
-```
+1. **Instalando Dependências**
 
-Em seguida:
+    ```bash
+    cd frontend
+    ```
 
-```bash
-npm run start
-```
+    ```bash
+    npm install --legacy-peer-deps
+    ```
+
+2. **Configurando o arquivo .env**
+
+   ```bash
+   ipconfig
+   ```
+
+    Localize o Adaptador de Rede sem Fio Wi-Fi e copie o valor do Endereço IPv4.
+
+   ```bash
+   Endereço IPv4. . . . . . . . : 172.20.10.6
+   ```
+
+    Altere a constante API_BASE_URL no arquivo .env na raiz do projeto com o endereço IPv4 na porta 8080:
+
+   ```bash
+   API_BASE_URL=http://172.20.10.6:8080
+   ```
+
+3. **Executando o Projeto**
+
+    Inicie o servidor do Expo:
+
+    ```bash
+    npm run start
+    ```
 
 - Um QR Code será exibido no terminal.
 - Escaneie com o aplicativo **Expo Go** no seu celular.
