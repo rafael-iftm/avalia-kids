@@ -50,7 +50,7 @@ docker-compose up --build
 
 ```bash
 cd frontend
-npm install
+npm install --legacy-peer-deps
 ```
 
 Em seguida:

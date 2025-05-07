@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
 
 const api = axios.create({
-  baseURL: 'http://192.168.15.2:8080',
+  baseURL: Constants.expoConfig?.extra?.apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },

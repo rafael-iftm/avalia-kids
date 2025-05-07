@@ -45,13 +45,34 @@ Execute o seguinte comando no diretório do projeto:
 npm install
 ```
 
-### 4. **Executando o Projeto**
+### 4. Configurando o arquivo .env
+Para que o aplicativo mobile se conecte corretamente ao backend local, você deve informar o IP da sua máquina na rede.
+
+1. Execute no terminal:
+
+   ```bash
+   ipconfig
+   ```
+
+2. Localize o Adaptador de Rede sem Fio Wi-Fi e copie o valor do Endereço IPv4.
+
+   ```bash
+   Endereço IPv4. . . . . . . . : 172.20.10.6
+   ```
+
+3. Altere a constante API_BASE_URL no arquivo .env na raiz do projeto com o endereço IPv4 na porta 8080:
+
+   ```bash
+   API_BASE_URL=http://172.20.10.6:8080
+   ```
+
+### 5. **Executando o Projeto**
 Inicie o servidor do Expo:
 
 ```bash
 npm run start
 ```
-### 5. **Executando no Dispositivo**
+### 6. **Executando no Dispositivo**
 1. No terminal, será exibido um QR Code.
 2. Abra o aplicativo **Expo Go** no seu dispositivo.
 3. Escaneie o QR Code para carregar o app no dispositivo.
