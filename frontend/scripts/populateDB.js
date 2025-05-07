@@ -122,7 +122,7 @@ async function populateDatabase() {
   } finally {
     // Fechar conexão com todos os bancos
     await Promise.all(Object.values(clients).map(client => client.close()));
-    console.log("✅ Conexões com os bancos fechadas!");
+    console.log("✅ Conexões com os bancos fechadas!\n");
   }
 }
 
