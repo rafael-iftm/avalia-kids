@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npm run populate && npx expo start --tunnel",
-    "populate": "node ./scripts/populateDB.js && node ./scripts/populateDB-micro.js",
+    "populate": "node ./scripts/populateDB-micro.js",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
