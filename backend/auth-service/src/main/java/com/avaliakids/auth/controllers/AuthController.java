@@ -1,9 +1,12 @@
 package com.avaliakids.auth.controllers;
 
+import com.avaliakids.auth.dtos.LoginRequest;
 import com.avaliakids.auth.exceptions.InvalidRoleException;
 import com.avaliakids.auth.exceptions.UserAlreadyExistsException;
 import com.avaliakids.auth.models.User;
 import com.avaliakids.auth.services.AuthService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +39,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+
         Optional<User> authenticatedUser = authService.authenticateUser(email, password);
         if (authenticatedUser.isPresent()) {
             User user = authenticatedUser.get();
             String token = authService.generateToken(user.getEmail(), user.getRole());
-    
+
             return ResponseEntity.ok(Map.of(
                 "token", token,
                 "userId", user.getId(),
@@ -51,7 +57,7 @@ public class AuthController {
         } else {
             return ResponseEntity.status(401).body(Map.of("message", "Credenciais inválidas."));
         }
-    }    
+    }
 
     @PostMapping("/validate-password")
     public ResponseEntity<?> validateParentPassword(@RequestBody Map<String, String> requestBody) {
