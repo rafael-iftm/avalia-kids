@@ -6,7 +6,6 @@ import com.avaliakids.auth.exceptions.UserAlreadyExistsException;
 import com.avaliakids.auth.models.User;
 import com.avaliakids.auth.services.AuthService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
