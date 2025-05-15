@@ -35,36 +35,23 @@ export const submitAnswer = async (
   }
 };
 
-// Buscar os resultados do aluno
-export const getStudentResults = async (studentId: string) => {
-  try {
-    const token = await getAuthToken();
-    if (!token) {
-      console.log("[Quiz] Erro: Token de autenticação não encontrado.");
-      throw new Error("Usuário não autenticado.");
-    }
-
-    const response = await api.get(`/quiz-service/quiz/results/${studentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.log("[Quiz] Erro ao buscar resultados:", error);
-    throw error;
-  }
-};
-
 export const fetchStudentResults = async (studentId: string, token: string) => {
   try {
-    const response = await api.get(`/quiz-service/results/${studentId}`, {
+    const response = await api.get(`/quiz-service/quiz/results/${studentId}`, {
       headers: { Authorization: `Bearer ${token}` },
+      validateStatus: () => true,
     });
-    return response.data;
+
+    console.log(`Resposta da API para aluno ${studentId}: HTTP ${response.status}`);
+
+    if (response.status === 200) {
+      return response.data;
+    }
+
+    console.warn(`[WARN] Resposta inesperada: HTTP ${response.status}`);
+    return [];
   } catch (error) {
-    console.log("[Quiz] Erro ao buscar resultados do aluno:", error);
+    console.error("[Quiz] Erro ao buscar resultados do aluno:", error);
     return [];
   }
 };
