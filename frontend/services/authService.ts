@@ -12,18 +12,7 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const url = '/auth-service/auth/login';
-
-  const curlCommand = `curl --location '${api.defaults.baseURL}${url}' \\
---header 'Content-Type: application/json' \\
---data-raw '{
-  "email": "${email}",
-  "password": "${password}"
-}'`;
-
-  // console.log("[DEBUG] Executando login com curl:\n", curlCommand);
-
-  const response = await api.post(url, {
+  const response = await api.post('/auth-service/auth/login', {
     email,
     password,
   });
