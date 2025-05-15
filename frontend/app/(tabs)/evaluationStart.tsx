@@ -71,8 +71,8 @@ export default function EvaluationStartScreen() {
           try {
             const totalQuestions = await fetchTotalQuestions(student.className);
             const answeredQuestions = await fetchStudentResults(student.id, token);
-  
-            if (answeredQuestions.length < totalQuestions) {
+            
+            if (answeredQuestions.length < totalQuestions || totalQuestions == 0) {
               studentsToEvaluate.push(student);
             }
           } catch (error) {
@@ -96,6 +96,13 @@ export default function EvaluationStartScreen() {
   
     fetchStudentsToEvaluate();
   }, []);
+
+  useEffect(() => {
+  if (preSelectedStudentId && preSelectedStudentName && preSelectedClassLevel) {
+    handleStudentSelection(preSelectedStudentId, preSelectedStudentName, preSelectedClassLevel);
+  }
+}, [preSelectedStudentId, preSelectedStudentName, preSelectedClassLevel]);
+
   
   const handleStudentSelection = async (studentId: string, studentName: string, classLevel: string) => {
     setSelectedStudent(studentId);
