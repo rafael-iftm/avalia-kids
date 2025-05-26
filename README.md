@@ -17,12 +17,13 @@ avalia-kids/
 ## 🛠️ Requisitos
 
 ### Para o Frontend
-- Node.js v18+
+- ([Node.js v18+](https://nodejs.org/pt/download))
 - Expo CLI
 - Dispositivo com o aplicativo **Expo Go** (Android/iOS)
 
 ### Para o Backend
-- Docker e Docker Compose
+- ([Java v17+](https://adoptium.net/temurin/releases/))
+- ([Docker e Docker Compose](https://docs.docker.com/compose/install/))
 
 ## 🚀 Como executar o projeto
 
