@@ -58,6 +58,12 @@ docker-compose up --build
     npm install --legacy-peer-deps
     ```
 
+    Obs: se o seu ambiente está configurado para usar algum registro privado do CodeArtifact (AWS), rode o comando abaixo para que o `npm` use o repositório público padrão:
+
+    ```bash
+    npm config set registry https://registry.npmjs.org/
+    ```
+
 2. **Configurando o arquivo .env**
 
    ```bash
