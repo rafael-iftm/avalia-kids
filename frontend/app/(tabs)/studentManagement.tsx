@@ -54,7 +54,7 @@ export default function StudentManagementScreen() {
   
       const updatedStudents = await Promise.all(
         studentsData.map(async (student: Student) => {
-          const totalQuestions = await fetchTotalQuestions(student.className);
+          const totalQuestions = await fetchTotalQuestions(student.className, token);
           const studentResults = await fetchStudentResults(student.id, token);
   
           // Conta quantas respostas foram corretas
