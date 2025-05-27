@@ -119,7 +119,7 @@ export default function StudentRegistrationScreen() {
       console.log('[Registro de Aluno] Resposta do backend:', response);
       // Alert.alert('Sucesso', 'Aluno cadastrado com sucesso!');
       setModalVisible(false);
-      router.push('/home');
+      router.push('/menu');
     } catch (error) {
       console.log('[Registro de Aluno] Erro durante o registro:', error);
   

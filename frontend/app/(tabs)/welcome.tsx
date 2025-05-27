@@ -44,7 +44,7 @@ export default function WelcomeScreen() {
     <View style={styles.container}>
       <CustomHeaderBar
         title="Avaliação"
-        leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
+        leftIcon={{ name: 'arrow-back-outline', route: routes.menu }}
       />
       {/* Conteúdo principal */}
       <View style={styles.content}>

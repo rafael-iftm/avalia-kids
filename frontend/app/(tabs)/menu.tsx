@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 
-export default function HomeScreen() {
+export default function MenuScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const [userName, setUserName] = useState('');

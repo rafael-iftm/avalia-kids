@@ -145,7 +145,7 @@ export default function EvaluationStartScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <CustomHeaderBar leftIcon={{ name: 'arrow-back-outline', route: routes.home }} />
+        <CustomHeaderBar leftIcon={{ name: 'arrow-back-outline', route: routes.menu }} />
 
         <View style={styles.content}>
           <Text style={styles.title}>Iniciar Avaliação</Text>

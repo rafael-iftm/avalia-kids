@@ -72,7 +72,7 @@ export default function LoginScreen() {
   
       if (role === 'TEACHER') {
         console.log('[Login] Usuário é TEACHER, redirecionando para Home.');
-        router.push('/home');
+        router.push('/menu');
       } else if (role === 'PARENT') {
         console.log('[Login] Usuário é PARENT, verificando estudantes vinculados...');
   
@@ -81,7 +81,7 @@ export default function LoginScreen() {
   
           if (students.length > 0) {
             console.log('[Login] Usuário PARENT tem estudantes cadastrados, redirecionando para Home.');
-            router.push('/home');
+            router.push('/menu');
           } else {
             console.log('[Login] Usuário PARENT não tem estudantes, redirecionando para Student Registration.');
             router.push('/studentRegistration');

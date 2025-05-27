@@ -42,7 +42,7 @@ export default function EvaluationEndScreen() {
         {/* Botão para voltar ao início */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.replace(routes.home)}
+          onPress={() => router.replace(routes.menu)}
         >
           <Text style={styles.buttonText}>Voltar ao início</Text>
         </TouchableOpacity>

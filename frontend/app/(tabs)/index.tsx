@@ -4,7 +4,7 @@ import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 
-export default function HomeScreen() {
+export default function IndexScreen() {
   const router = useRouter();
   const navigation = useNavigation();
 
