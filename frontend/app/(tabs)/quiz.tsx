@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getQuestionsByClassLevel } from "@/services/questionService";
 import { Question } from "@/types/Question";
 import { submitAnswer } from "@/services/quizService";
+import { getAuthToken } from "@/utils/auth";
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -44,6 +45,7 @@ export default function QuizScreen() {
         try {
             const classLevel = await AsyncStorage.getItem("classLevel");
             const storedStudentId = await AsyncStorage.getItem("selectedStudentId");
+            const token = await getAuthToken();
 
             if (!classLevel || !storedStudentId) {
                 Alert.alert("Erro", "Informações do aluno ou nível da turma não encontradas.");
@@ -55,7 +57,7 @@ export default function QuizScreen() {
 
             setStudentId(storedStudentId);
 
-            const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim());
+            const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim(), token);
 
             if (!fetchedQuestions || fetchedQuestions.length === 0) {
                 Alert.alert("Erro", "Nenhuma questão disponível para esta turma.");

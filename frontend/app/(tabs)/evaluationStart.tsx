@@ -69,7 +69,7 @@ export default function EvaluationStartScreen() {
   
         for (const student of studentsData) {
           try {
-            const totalQuestions = await fetchTotalQuestions(student.className);
+            const totalQuestions = await fetchTotalQuestions(student.className, token);
             const answeredQuestions = await fetchStudentResults(student.id, token);
             
             if (answeredQuestions.length < totalQuestions || totalQuestions == 0) {

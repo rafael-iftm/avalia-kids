@@ -56,9 +56,11 @@ export const fetchStudentResults = async (studentId: string, token: string) => {
   }
 };
 
-export const fetchTotalQuestions = async (classLevel: string) => {
+export const fetchTotalQuestions = async (classLevel: string, token: string) => {
   try {
-    const response = await api.get(`/question-service/questions/${classLevel}`);
+    const response = await api.get(`/question-service/questions/${classLevel}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data.length;
   } catch (error) {
     console.log("[Quiz] Erro ao buscar total de perguntas:", error);
