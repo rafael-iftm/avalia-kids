@@ -101,6 +101,8 @@ export default function QuizScreen() {
     } catch (error) {
       console.log("[Quiz] Erro ao enviar resposta:", error);
     }
+
+     console.log(`[Quiz] Resposta salva`)
   };
 
   if (loading) {
@@ -114,6 +116,7 @@ export default function QuizScreen() {
         <Text style={styles.errorText}>Nenhuma questão disponível para sua turma.</Text>
       </View>
     );
+    
   }
 
   const totalQuestions = questions.length;
