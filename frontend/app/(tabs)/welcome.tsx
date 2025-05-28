@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -13,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
 
 export default function WelcomeScreen() {
   const [userName, setUserName] = useState('');
@@ -50,9 +50,9 @@ export default function WelcomeScreen() {
       <View style={styles.content}>
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
           style={styles.mascotImage}
-          resizeMode="contain"
+          contentFit="contain"
         />
         <Text style={styles.welcomeText}>Bem-vindo ao Avalia Kids</Text>
         <Text style={styles.subtitle}>

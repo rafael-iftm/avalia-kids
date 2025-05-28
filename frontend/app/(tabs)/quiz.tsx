@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Image,
   StyleSheet,
   ActivityIndicator,
   Alert,
@@ -21,6 +20,7 @@ import { getQuestionsByClassLevel } from "@/services/questionService";
 import { Question } from "@/types/Question";
 import { submitAnswer } from "@/services/quizService";
 import { getAuthToken } from "@/utils/auth";
+import { Image } from 'expo-image';
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -118,13 +118,11 @@ export default function QuizScreen() {
           leftIcon={{ name: "arrow-back-outline", route: routes.home }}
         />
         <View style={styles.emptyContent}>
-          <Image
-            source={{
-              uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/no-questions.png?alt=media',
-            }}
-            style={styles.emptyImage}
-            resizeMode="contain"
-          />
+        <Image
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/no-questions.png?alt=media"
+          style={styles.emptyImage}
+          contentFit="contain"
+        />
           <Text style={styles.emptyTitle}>Sem questões cadastradas</Text>
           <Text style={styles.emptySubtitle}>
             Nenhuma questão foi encontrada para a turma do aluno selecionado.
@@ -174,7 +172,11 @@ export default function QuizScreen() {
           totalQuestions={totalQuestions}
         />
 
-        <Image source={{ uri: question.imageUrl }} style={styles.image} />
+        <Image
+          source={question.imageUrl}
+          style={styles.image}
+          contentFit="contain"
+        />
 
         <QuestionCard question={question.text} />
 

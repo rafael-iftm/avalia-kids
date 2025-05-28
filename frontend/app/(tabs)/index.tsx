@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
+import { Image } from 'expo-image';
 
 export default function IndexScreen() {
   const router = useRouter();
@@ -18,8 +19,9 @@ export default function IndexScreen() {
       <View style={styles.content}>
           {/* Imagem do logo */}
         <Image
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/logo.png?alt=media'}}
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/logo.png?alt=media"
           style={styles.logo}
+          contentFit="contain"
         />
 
         {/* Título */}
@@ -27,8 +29,9 @@ export default function IndexScreen() {
 
         {/* Mascote */}
         <Image
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
           style={styles.mascot}
+          contentFit="contain"
         />
 
         {/* Subtítulo */}

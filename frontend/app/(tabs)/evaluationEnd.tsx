@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { Image } from 'expo-image';
 
 export default function EvaluationEndScreen() {
   const router = useRouter();
@@ -23,9 +24,9 @@ export default function EvaluationEndScreen() {
       <View style={styles.content}>
         {/* Imagem do foguete */}
         <Image
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/rocket.png?alt=media'}}
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/rocket.png?alt=media"
           style={styles.rocketImage}
-          resizeMode="contain"
+          contentFit="contain"
         />
 
         {/* Título de Parabéns */}

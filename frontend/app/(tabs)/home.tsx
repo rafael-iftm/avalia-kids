@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { Image } from 'expo-image';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -45,19 +46,20 @@ export default function HomeScreen() {
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Text style={styles.question}>O que deseja fazer?</Text>
 
-        <Image
-          source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media'}}
-          style={styles.mascotImage}
-          resizeMode="contain"
-        />
+      <Image
+        source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
+        style={styles.mascotImage}
+        contentFit="contain"
+      />
 
         <TouchableOpacity
           style={styles.menuButton}
           onPress={() => router.push('/studentManagement')}
         >
           <Image
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/students-icon.png?alt=media'}}
+            source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/students-icon.png?alt=media"
             style={styles.iconImage}
+            contentFit="contain"
           />
           <Text style={styles.buttonText}>Gerenciar Alunos</Text>
         </TouchableOpacity>
@@ -67,8 +69,9 @@ export default function HomeScreen() {
           onPress={() => router.push('/evaluationStart')}
         >
           <Image
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media'}}
+            source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media"
             style={styles.iconImage}
+            contentFit="contain"
           />
           <Text style={styles.buttonText}>Realizar Avaliações</Text>
         </TouchableOpacity>
