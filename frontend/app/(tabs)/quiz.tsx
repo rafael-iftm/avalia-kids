@@ -122,7 +122,7 @@ export default function QuizScreen() {
           source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/no-questions.png?alt=media"
           style={styles.emptyImage}
           contentFit="contain"
-          cachePolicy="memory-disk"
+          cachePolicy="none"
         />
           <Text style={styles.emptyTitle}>Sem questões cadastradas</Text>
           <Text style={styles.emptySubtitle}>
@@ -177,7 +177,7 @@ export default function QuizScreen() {
           source={question.imageUrl}
           style={styles.image}
           contentFit="contain"
-          cachePolicy="memory-disk"
+          cachePolicy="none"
         />
 
         <QuestionCard question={question.text} />
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250,
     marginBottom: 24,
+    borderRadius: 10
   },
   emptyTitle: {
     fontSize: 24,
