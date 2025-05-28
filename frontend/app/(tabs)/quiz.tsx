@@ -60,7 +60,6 @@ export default function QuizScreen() {
             const fetchedQuestions = await getQuestionsByClassLevel(classLevel.trim(), token);
 
             if (!fetchedQuestions || fetchedQuestions.length === 0) {
-                Alert.alert("Erro", "Nenhuma questão disponível para esta turma.");
                 return;
             }
 
@@ -114,11 +113,25 @@ export default function QuizScreen() {
   if (questions.length === 0) {
     return (
       <View style={styles.container}>
-        <CustomHeaderBar title="Avaliação" />
-        <Text style={styles.errorText}>Nenhuma questão disponível para sua turma.</Text>
+        <CustomHeaderBar
+          title="Avaliação"
+          leftIcon={{ name: "arrow-back-outline", route: routes.home }}
+        />
+        <View style={styles.emptyContent}>
+          <Image
+            source={{
+              uri: 'https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/no-questions.png?alt=media',
+            }}
+            style={styles.emptyImage}
+            resizeMode="contain"
+          />
+          <Text style={styles.emptyTitle}>Sem questões cadastradas</Text>
+          <Text style={styles.emptySubtitle}>
+            Nenhuma questão foi encontrada para a turma do aluno selecionado.
+          </Text>
+        </View>
       </View>
     );
-    
   }
 
   const totalQuestions = questions.length;
@@ -229,5 +242,28 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 20,
+  },
+  emptyContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    marginBottom: 100,
+  },
+  emptyImage: {
+    width: 250,
+    height: 250,
+    marginBottom: 24,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1B3C87',
+    marginBottom: 12,
+  },
+  emptySubtitle: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#4A5568',
   },
 });
