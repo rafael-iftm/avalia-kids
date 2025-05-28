@@ -22,6 +22,7 @@ export default function IndexScreen() {
           source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/logo.png?alt=media"
           style={styles.logo}
           contentFit="contain"
+          cachePolicy="memory-disk"
         />
 
         {/* Título */}
@@ -32,6 +33,7 @@ export default function IndexScreen() {
           source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
           style={styles.mascot}
           contentFit="contain"
+          cachePolicy="memory-disk"
         />
 
         {/* Subtítulo */}

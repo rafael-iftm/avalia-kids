@@ -27,6 +27,7 @@ export default function EvaluationEndScreen() {
           source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/rocket.png?alt=media"
           style={styles.rocketImage}
           contentFit="contain"
+          cachePolicy="memory-disk"
         />
 
         {/* Título de Parabéns */}

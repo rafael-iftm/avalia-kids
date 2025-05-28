@@ -50,6 +50,7 @@ export default function HomeScreen() {
         source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
         style={styles.mascotImage}
         contentFit="contain"
+        cachePolicy="memory-disk"
       />
 
         <TouchableOpacity
@@ -60,6 +61,7 @@ export default function HomeScreen() {
             source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/students-icon.png?alt=media"
             style={styles.iconImage}
             contentFit="contain"
+            cachePolicy="memory-disk"
           />
           <Text style={styles.buttonText}>Gerenciar Alunos</Text>
         </TouchableOpacity>
@@ -72,6 +74,7 @@ export default function HomeScreen() {
             source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media"
             style={styles.iconImage}
             contentFit="contain"
+            cachePolicy="memory-disk"
           />
           <Text style={styles.buttonText}>Realizar Avaliações</Text>
         </TouchableOpacity>

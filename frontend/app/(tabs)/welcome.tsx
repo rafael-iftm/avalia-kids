@@ -53,6 +53,7 @@ export default function WelcomeScreen() {
           source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
           style={styles.mascotImage}
           contentFit="contain"
+          cachePolicy="memory-disk"
         />
         <Text style={styles.welcomeText}>Bem-vindo ao Avalia Kids</Text>
         <Text style={styles.subtitle}>
