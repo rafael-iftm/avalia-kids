@@ -107,7 +107,7 @@ async function populateDatabase() {
             text: pergunta.text,
             options: pergunta.options,
             correctOption: pergunta.correctOption,
-            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/questions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.png?alt=media`,
+            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/questions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.jpeg?alt=media`,
             classLevel: classLevel,
           });
         });

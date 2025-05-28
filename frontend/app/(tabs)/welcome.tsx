@@ -50,7 +50,7 @@ export default function WelcomeScreen() {
       <View style={styles.content}>
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
-          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
+          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media"
           style={styles.mascotImage}
           contentFit="contain"
           cachePolicy="none"
