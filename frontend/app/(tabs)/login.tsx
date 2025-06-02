@@ -52,44 +52,31 @@ export default function LoginScreen() {
       const token = response.token;
       const userId = response.userId;
       const name = response.name;
-      const role = response.role;
-  
-      if (!token || !userId || !name || !role) {
-        throw new Error('Dados incompletos recebidos do servidor.');
-      }
+
   
       console.log('[Login] Token JWT recebido:', token);
       console.log('[Login] ID do usuário recebido:', userId);
       console.log('[Login] Nome do usuário recebido:', name);
-      console.log('[Login] Role do usuário recebido:', role);
   
       await storeAuthToken(token);
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('name', name);
-      await AsyncStorage.setItem('role', role);
   
       console.log('[Login] Dados de autenticação armazenados com sucesso.');
-  
-      if (role === 'TEACHER') {
-        console.log('[Login] Usuário é TEACHER, redirecionando para Home.');
-        router.push('/home');
-      } else if (role === 'PARENT') {
-        console.log('[Login] Usuário é PARENT, verificando estudantes vinculados...');
-  
-        try {
-          const students = await getStudentsByParent(userId);
-  
-          if (students.length > 0) {
-            console.log('[Login] Usuário PARENT tem estudantes cadastrados, redirecionando para Home.');
-            router.push('/home');
-          } else {
-            console.log('[Login] Usuário PARENT não tem estudantes, redirecionando para Student Registration.');
-            router.push('/studentRegistration');
-          }
-        } catch (error) {
-          console.log('[Login] Erro ao buscar estudantes do PARENT:', error);
-          Alert.alert('Erro', 'Erro ao buscar alunos. Verifique sua conexão.');
+
+      try {
+        const students = await getStudentsByParent(userId);
+
+        if (students.length > 0) {
+          console.log('[Login] Usuário PARENT tem estudantes cadastrados, redirecionando para Home.');
+          router.push('/home');
+        } else {
+          console.log('[Login] Usuário PARENT não tem estudantes, redirecionando para Student Registration.');
+          router.push('/studentRegistration');
         }
+      } catch (error) {
+        console.log('[Login] Erro ao buscar estudantes do PARENT:', error);
+        Alert.alert('Erro', 'Erro ao buscar alunos. Verifique sua conexão.');
       }
     } catch (error) {
       console.log('[Login] Erro durante o login:', error);
@@ -118,8 +105,7 @@ export default function LoginScreen() {
       }
     }
   };
-  
-  
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>

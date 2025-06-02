@@ -43,7 +43,6 @@ async function populateDatabase() {
     // Criar usuários (banco users)
     const hashedPassword = bcrypt.hashSync("123456", 10);
     const users = [
-      { name: "Carlos Educador", email: "professor@avaliakids.com", password: hashedPassword, role: "TEACHER" },
       { name: "Mariana Responsável", email: "parent@avaliakids.com", password: hashedPassword, role: "PARENT" },
     ];
 

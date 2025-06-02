@@ -115,15 +115,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    width: '50%',
+    flex: 1,
+    marginRight: 10,
   },
   searchInput: {
     marginLeft: 8,
     flex: 1,
     fontSize: 16,
+    paddingVertical: 0,
+    height: 24,
   },
   sortButton: {
     flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 1,
   },
   sortButtonText: {
     fontSize: 14,

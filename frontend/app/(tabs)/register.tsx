@@ -19,7 +19,6 @@ export default function RegisterScreen() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('Responsável');
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -88,7 +87,7 @@ export default function RegisterScreen() {
       return;
     }
   
-    const role = selectedRole === 'Responsável' ? 'PARENT' : 'TEACHER';
+    const role = 'PARENT';
     console.log('[Register] Tentando registrar o usuário:', { name, email, role });
   
     try {
@@ -186,26 +185,6 @@ export default function RegisterScreen() {
           </View>
           {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-          {/* Seleção de usuário */}
-          <View style={styles.roleContainer}>
-            <TouchableOpacity
-              style={[styles.roleButton, selectedRole === 'Responsável' && styles.roleSelected]}
-              onPress={() => setSelectedRole('Responsável')}
-            >
-              <Text style={[styles.roleText, selectedRole === 'Responsável' && styles.roleTextSelected]}>
-                Responsável
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.roleButton, selectedRole === 'Professor' && styles.roleSelected]}
-              onPress={() => setSelectedRole('Professor')}
-            >
-              <Text style={[styles.roleText, selectedRole === 'Professor' && styles.roleTextSelected]}>
-                Professor
-              </Text>
-            </TouchableOpacity>
-          </View>
-
           {/* Aceitação de termos */}
           <View style={styles.checkboxContainer}>
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={styles.checkbox}>
@@ -299,31 +278,6 @@ const styles = StyleSheet.create({
     color: '#1B3C87',
     textAlign: 'center',
     textDecorationLine: 'underline',
-  },
-  roleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  roleButton: {
-    minWidth: 140,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#1B3C87',
-    borderRadius: 8,
-    marginHorizontal: 5,
-    alignItems: 'center',
-  },
-  roleSelected: {
-    backgroundColor: '#1B3C87',
-  },
-  roleText: {
-    color: '#1B3C87',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  roleTextSelected: {
-    color: '#FFFFFF',
   },
   checkboxContainer: {
     flexDirection: 'row',

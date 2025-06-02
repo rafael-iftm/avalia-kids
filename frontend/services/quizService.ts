@@ -42,8 +42,6 @@ export const fetchStudentResults = async (studentId: string, token: string) => {
       validateStatus: () => true,
     });
 
-    console.log(`Resposta da API para aluno ${studentId}: HTTP ${response.status}`);
-
     if (response.status === 200) {
       return response.data;
     }
