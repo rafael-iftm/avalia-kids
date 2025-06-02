@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Alert,
   Text,
+  InteractionManager,
 } from "react-native";
 import Header from "../../components/Header";
 import QuestionCard from "../../components/ui/QuestionCard";
@@ -21,6 +22,7 @@ import { Question } from "@/types/Question";
 import { submitAnswer } from "@/services/quizService";
 import { getAuthToken } from "@/utils/auth";
 import { Image } from 'expo-image';
+import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -141,17 +143,19 @@ export default function QuizScreen() {
     submitAnswerToAPI(question.id, option);
 
     if (option === question.correctOption) {
-      setShowConfetti(true);
-      setTimeout(() => {
-        setShowConfetti(false);
-        if (currentQuestionIndex < totalQuestions - 1) {
-          setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-          setSelectedAnswer(null);
-          setDisabledOptions([]);
-        } else {
-          router.replace("/evaluationEnd");
-        }
-      }, 1500);
+      InteractionManager.runAfterInteractions(() => {
+        setShowConfetti(true);
+        setTimeout(() => {
+          setShowConfetti(false);
+          if (currentQuestionIndex < totalQuestions - 1) {
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+            setSelectedAnswer(null);
+            setDisabledOptions([]);
+          } else {
+            router.replace("/evaluationEnd");
+          }
+        }, 1500);
+      });
     } else {
       setDisabledOptions([...disabledOptions, option]);
     }
@@ -173,11 +177,18 @@ export default function QuizScreen() {
           totalQuestions={totalQuestions}
         />
 
+      <Animated.View
+        key={question.id}
+        entering={FadeIn.duration(300)}
+        exiting={FadeOut.duration(300)}
+        layout={Layout.springify()}
+      >
         <Image
           source={question.imageUrl}
           style={styles.image}
           contentFit="contain"
           cachePolicy="none"
+          transition={300}
         />
 
         <QuestionCard question={question.text} />
@@ -197,16 +208,32 @@ export default function QuizScreen() {
             }
           />
         ))}
+      </Animated.View>
 
-        {showConfetti && (
+      {showConfetti && (
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <ConfettiCannon
-            count={200}
+            key={currentQuestionIndex}
+            count={100}
             origin={{ x: 0, y: 0 }}
-            fadeOut={true}
-            explosionSpeed={500}
-            fallSpeed={1500}
+            fadeOut
+            explosionSpeed={400}
+            fallSpeed={1200}
+            onAnimationEnd={() => {
+              setShowConfetti(false);
+              setTimeout(() => {
+                if (currentQuestionIndex < totalQuestions - 1) {
+                  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                  setSelectedAnswer(null);
+                  setDisabledOptions([]);
+                } else {
+                  router.replace("/evaluationEnd");
+                }
+              }, 250);
+            }}
           />
-        )}
+        </View>
+      )}
       </View>
     </View>
   );
