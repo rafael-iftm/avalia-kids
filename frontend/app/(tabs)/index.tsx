@@ -38,7 +38,7 @@ export default function IndexScreen() {
         />
 
         {/* Subtítulo */}
-        <Text style={styles.subtitle}>Avalie seu conhecimento de uma forma muito divertida</Text>
+        <Text style={styles.subtitle}>Uma forma divertida e educativa de acompanhar o aprendizado da sua criança!</Text>
 
         {/* Botões */}
         <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/login')}>
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 19,
     marginBottom: 50
   },
   logo: {

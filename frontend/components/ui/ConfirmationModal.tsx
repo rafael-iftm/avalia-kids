@@ -23,7 +23,7 @@ export default function ConfirmationModal({
           <Text style={styles.modalTitle}>Confirmar Cadastro</Text>
 
           {/* Campos preenchidos não editáveis */}
-          <Text style={styles.label}>Nome completo</Text>
+          <Text style={styles.label}>Nome</Text>
           <TextInput value={newStudentName} style={[styles.input, styles.disabledInput]} editable={false} />
 
           <Text style={styles.label}>Data de nascimento</Text>

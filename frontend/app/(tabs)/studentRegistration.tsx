@@ -21,6 +21,8 @@ import { registerStudent } from '@/services/studentService';
 import { getAuthToken } from '@/utils/auth';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 
 export default function StudentRegistrationScreen() {
@@ -140,25 +142,32 @@ export default function StudentRegistrationScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <CustomHeaderBar
-          //leftIcon={{ name: 'settings-outline', route: routes.settings }} [REMOVER NA V2]
+          title="Cadastro"
           rightIcon={{ name: 'log-out-outline', route: routes.login }}
         />
 
         <View style={styles.content}>
           <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
           <Text style={styles.instructions}>
-            Antes de realizar alguma avaliação, você deve cadastrar ao menos um aluno para continuar:
+            Para começar, cadastre a criança que vai brincar e aprender com a gente!
           </Text>
 
+          <Image
+            source={getImageUrl({ folder: 'default', filename: 'student-registration' })}
+            style={styles.studentRegistrationImage}
+            contentFit="contain"
+            cachePolicy="none"
+          />
+
           <TextInput
-            placeholder="Nome do Aluno"
+            placeholder="Digite o nome da criança"
             placeholderTextColor="#888"
             style={styles.input}
             value={studentName}
             onChangeText={handleNameChange}
           />
           <TextInput
-            placeholder="Data de Nascimento (DD/MM/AAAA)"
+            placeholder="Digite a data de nascimento da criança"
             placeholderTextColor="#888"
             style={styles.input}
             value={birthDate}
@@ -172,7 +181,7 @@ export default function StudentRegistrationScreen() {
             disabled={!isFormValid()}
             onPress={handleRegisterStudent}
           >
-            <Text style={styles.primaryButtonText}>Cadastre seu Aluno</Text>
+            <Text style={styles.primaryButtonText}>Continuar</Text>
           </TouchableOpacity>
         </View>
 
@@ -197,19 +206,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginBottom: 80,
+  },
+  studentRegistrationImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   greeting: {
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    marginTop: -200,
   },
   instructions: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   input: {
     height: 50,
