@@ -144,7 +144,7 @@ export default function RegisterScreen() {
 
           {/* Campo de nome */}
           <TextInput
-            placeholder="Nome"
+            placeholder="Digite seu nome"
             placeholderTextColor="#888888"
             style={styles.input}
             value={name}
@@ -153,7 +153,7 @@ export default function RegisterScreen() {
 
           {/* Campo de e-mail */}
           <TextInput
-            placeholder="Email"
+            placeholder="Digite seu e-mail"
             placeholderTextColor="#888888"
             style={styles.input}
             value={email}

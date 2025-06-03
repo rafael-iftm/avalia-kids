@@ -21,9 +21,10 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '@/types/Student';
-import axios from 'axios';
 import { getAuthToken } from '@/utils/auth';
 import { fetchStudentResults, fetchTotalQuestions } from '@/services/quizService';
+import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function EvaluationStartScreen() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -145,10 +146,18 @@ export default function EvaluationStartScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <CustomHeaderBar leftIcon={{ name: 'arrow-back-outline', route: routes.home }} />
+        <CustomHeaderBar
+          title="Avaliação"
+          leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
+        />
 
         <View style={styles.content}>
-          <Text style={styles.title}>Iniciar Avaliação</Text>
+          <Image
+            source={getImageUrl({ folder: 'default', filename: 'login' })}
+            style={styles.evaluationImage}
+            contentFit="contain"
+            cachePolicy="none"
+          />
 
           <Text style={styles.sectionText}>1. Identifique o aluno que será avaliado:</Text>
           <TouchableOpacity
@@ -214,11 +223,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 150,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 30,
+  evaluationImage: {
+    width: 250,
+    height: 250,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   sectionText: {
     fontSize: 16,

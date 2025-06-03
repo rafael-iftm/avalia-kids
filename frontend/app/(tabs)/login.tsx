@@ -13,6 +13,8 @@ import axios from 'axios';
 import { storeAuthToken } from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentsByParent } from '@/services/studentService';
+import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -110,16 +112,21 @@ export default function LoginScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <CustomHeaderBar
+          title="Entrar"
           leftIcon={{ name: 'arrow-back-outline', route: routes.index }}
         />
 
         <View style={styles.content}>
-          {/* Título */}
-          <Text style={styles.title}>Entrar</Text>
+          <Image
+            source={getImageUrl({ folder: 'default', filename: 'login' })}
+            style={styles.loginImage}
+            contentFit="contain"
+            cachePolicy="none"
+          />
 
           {/* Campo de e-mail */}
           <TextInput
-            placeholder="Email"
+            placeholder="Digite seu e-mail"
             placeholderTextColor="#888888"
             style={styles.input}
             value={email}
@@ -131,7 +138,7 @@ export default function LoginScreen() {
           {/* Campo de senha */}
           <View style={styles.passwordContainer}>
             <TextInput
-              placeholder="Senha"
+              placeholder="Digite sua senha"
               placeholderTextColor="#888888"
               secureTextEntry={!passwordVisible}
               style={styles.passwordInput}
@@ -176,13 +183,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginBottom: 80,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 40,
-    marginTop: -200,
+  loginImage: {
+    width: 250,
+    height: 250,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   input: {
     height: 50,
