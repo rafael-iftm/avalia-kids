@@ -13,6 +13,7 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function WelcomeScreen() {
   const [userName, setUserName] = useState('');
@@ -50,7 +51,7 @@ export default function WelcomeScreen() {
       <View style={styles.content}>
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
-          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media"
+          source={getImageUrl({ folder: 'default', filename: 'evaluation-icon' })}
           style={styles.mascotImage}
           contentFit="contain"
           cachePolicy="none"

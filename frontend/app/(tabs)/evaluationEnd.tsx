@@ -6,6 +6,7 @@ import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function EvaluationEndScreen() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function EvaluationEndScreen() {
       <View style={styles.content}>
         {/* Imagem do foguete */}
         <Image
-          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/rocket.png?alt=media"
+          source={getImageUrl({ folder: 'default', filename: 'rocket' })}
           style={styles.rocketImage}
           contentFit="contain"
           cachePolicy="none"

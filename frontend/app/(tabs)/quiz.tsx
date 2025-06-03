@@ -23,6 +23,8 @@ import { submitAnswer } from "@/services/quizService";
 import { getAuthToken } from "@/utils/auth";
 import { Image } from 'expo-image';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
+import SuccessAnimation from "@/components/ui/SuccessAnimation";
+import { getImageUrl } from "@/utils/storage";
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -121,7 +123,7 @@ export default function QuizScreen() {
         />
         <View style={styles.emptyContent}>
         <Image
-          source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/no-questions.png?alt=media"
+          source={getImageUrl({ folder: 'default', filename: 'no-questions' })}
           style={styles.emptyImage}
           contentFit="contain"
           cachePolicy="none"
@@ -143,7 +145,6 @@ export default function QuizScreen() {
     submitAnswerToAPI(question.id, option);
 
     if (option === question.correctOption) {
-      InteractionManager.runAfterInteractions(() => {
         setShowConfetti(true);
         setTimeout(() => {
           setShowConfetti(false);
@@ -155,7 +156,6 @@ export default function QuizScreen() {
             router.replace("/evaluationEnd");
           }
         }, 1500);
-      });
     } else {
       setDisabledOptions([...disabledOptions, option]);
     }
@@ -211,28 +211,20 @@ export default function QuizScreen() {
       </Animated.View>
 
       {showConfetti && (
-        <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          <ConfettiCannon
-            key={currentQuestionIndex}
-            count={100}
-            origin={{ x: 0, y: 0 }}
-            fadeOut
-            explosionSpeed={400}
-            fallSpeed={1200}
-            onAnimationEnd={() => {
-              setShowConfetti(false);
-              setTimeout(() => {
-                if (currentQuestionIndex < totalQuestions - 1) {
-                  setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-                  setSelectedAnswer(null);
-                  setDisabledOptions([]);
-                } else {
-                  router.replace("/evaluationEnd");
-                }
-              }, 250);
-            }}
-          />
-        </View>
+        <SuccessAnimation
+          onFinish={() => {
+            setShowConfetti(false);
+            setTimeout(() => {
+              if (currentQuestionIndex < totalQuestions - 1) {
+                setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+                setSelectedAnswer(null);
+                setDisabledOptions([]);
+              } else {
+                router.replace("/evaluationEnd");
+              }
+            }, 250);
+          }}
+        />
       )}
       </View>
     </View>

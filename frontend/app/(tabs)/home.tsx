@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function HomeScreen() {
         <Text style={styles.question}>O que deseja fazer?</Text>
 
       <Image
-        source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/mascote.png?alt=media"
+        source={getImageUrl({ folder: 'default', filename: 'mascote' })}
         style={styles.mascotImage}
         contentFit="contain"
         cachePolicy="none"
@@ -58,7 +59,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/studentManagement')}
         >
           <Image
-            source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/students-icon.png?alt=media"
+            source={getImageUrl({ folder: 'default', filename: 'students-icon' })}
             style={styles.iconImage}
             contentFit="contain"
             cachePolicy="none"
@@ -71,7 +72,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/evaluationStart')}
         >
           <Image
-            source="https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/evaluation-icon.png?alt=media"
+            source={getImageUrl({ folder: 'default', filename: 'evaluation-icon' })}
             style={styles.iconImage}
             contentFit="contain"
             cachePolicy="none"
