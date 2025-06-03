@@ -10,6 +10,8 @@ import { routes } from '@/routes';
 import { registerUser } from '@/services/authService';
 import { Alert } from 'react-native';
 import axios from 'axios';
+import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -128,11 +130,17 @@ export default function RegisterScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <CustomHeaderBar
+          title="Cadastro"
           leftIcon={{ name: 'arrow-back-outline', route: routes.index }}
         />
 
         <View style={styles.content}>
-          <Text style={styles.title}>Cadastro</Text>
+          <Image
+            source={getImageUrl({ folder: 'default', filename: 'register' })}
+            style={styles.registerImage}
+            contentFit="contain"
+            cachePolicy="none"
+          />
 
           {/* Campo de nome */}
           <TextInput
@@ -223,11 +231,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 80,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 40,
+  registerImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   input: {
     height: 50,
