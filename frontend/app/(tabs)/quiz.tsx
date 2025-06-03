@@ -130,7 +130,7 @@ export default function QuizScreen() {
         />
           <Text style={styles.emptyTitle}>Sem questões cadastradas</Text>
           <Text style={styles.emptySubtitle}>
-            Nenhuma questão foi encontrada para a turma do aluno selecionado.
+            Nenhuma questão foi encontrada para a turma da criança selecionada.
           </Text>
         </View>
       </View>

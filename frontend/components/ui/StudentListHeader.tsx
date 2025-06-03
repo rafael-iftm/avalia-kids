@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { Image } from 'expo-image';
+import { getImageUrl } from '@/utils/storage';
 
 interface Props {
   studentsCount: number;
@@ -26,13 +28,18 @@ export default function StudentListHeader({
   return (
     <>
       <View style={styles.summary}>
-        <Ionicons name="people-circle-outline" size={60} color="#6FCF97" />
+        <Image
+          source={getImageUrl({ folder: 'default', filename: 'total-kids' })}
+          style={styles.totalKidsImage}
+          contentFit="contain"
+          cachePolicy="none"
+        />
         <View style={styles.summaryText}>
-          <Text style={styles.totalLabel}>Total de Alunos</Text>
+          <Text style={styles.totalLabel}>Total de Crianças</Text>
           <Text style={styles.totalNumber}>{studentsCount}</Text>
         </View>
         <TouchableOpacity style={styles.newStudentButton} onPress={onNewStudentPress}>
-          <Text style={styles.newStudentButtonText}>Novo Aluno</Text>
+          <Text style={styles.newStudentButtonText}>Nova Criança</Text>
         </TouchableOpacity>
       </View>
 
@@ -41,7 +48,7 @@ export default function StudentListHeader({
           <Ionicons name="search-outline" size={20} color="#666" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Pesquise um aluno"
+            placeholder="Pesquise um nome"
             placeholderTextColor="#A0A0A0"
             value={searchQuery}
             onChangeText={onSearch}
@@ -56,7 +63,7 @@ export default function StudentListHeader({
       </View>
 
       <View style={styles.tableHeader}>
-        <Text style={[styles.tableHeaderText, styles.headerName]}>Aluno</Text>
+        <Text style={[styles.tableHeaderText, styles.headerName]}>Nome</Text>
         <Text style={[styles.tableHeaderText, styles.headerGrade]}>Turma</Text>
         <Text style={[styles.tableHeaderText, styles.headerScore]}>Acertos</Text>
       </View>
@@ -78,7 +85,11 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   summaryText: {
-    marginLeft: 15,
+    marginLeft: 10,
+  },
+  totalKidsImage: {
+    width: 80,
+    height: 80,
   },
   totalLabel: {
     fontSize: 14,
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   newStudentButton: {
-    backgroundColor: '#6FCF97',
+    backgroundColor: '#1B3C87',
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 8,

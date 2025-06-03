@@ -29,7 +29,7 @@ import { getImageUrl } from '@/utils/storage';
 export default function EvaluationStartScreen() {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState('');
-  const [selectedStudentName, setSelectedStudentName] = useState('Selecione um aluno');
+  const [selectedStudentName, setSelectedStudentName] = useState('Selecione uma criança');
   const [password, setPassword] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -119,7 +119,7 @@ export default function EvaluationStartScreen() {
 
   const handleContinue = async () => {
     if (selectedStudent.trim() === '' || password.trim() === '') {
-      Alert.alert('Erro', 'Selecione um aluno e insira a senha do responsável.');
+      Alert.alert('Erro', 'Selecione uma criança e insira a sua senha.');
       return;
     }
 
@@ -147,19 +147,20 @@ export default function EvaluationStartScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <CustomHeaderBar
-          title="Avaliação"
+          title="Iniciar Avaliação"
           leftIcon={{ name: 'arrow-back-outline', route: routes.home }}
+          rightIcon={{ name: 'log-out-outline', route: routes.login }}
         />
 
         <View style={styles.content}>
           <Image
-            source={getImageUrl({ folder: 'default', filename: 'login' })}
+            source={getImageUrl({ folder: 'default', filename: 'evaluation-start' })}
             style={styles.evaluationImage}
             contentFit="contain"
             cachePolicy="none"
           />
 
-          <Text style={styles.sectionText}>1. Identifique o aluno que será avaliado:</Text>
+          <Text style={styles.sectionText}>1. Escolha qual criança será avaliada:</Text>
           <TouchableOpacity
             style={styles.pickerButton}
             onPress={() => setModalVisible(true)}
@@ -193,9 +194,9 @@ export default function EvaluationStartScreen() {
             </View>
           </Modal>
 
-          <Text style={styles.sectionText}>2. Use a senha do responsável para iniciar</Text>
+          <Text style={styles.sectionText}>2. Confirme com a sua senha para continuar:</Text>
           <TextInput
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             secureTextEntry
             style={styles.input}
             value={password}
@@ -221,12 +222,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 150,
+    marginBottom: 50,
   },
   evaluationImage: {
     width: 250,
     height: 250,
-    marginBottom: 20,
+    marginBottom: 30,
     alignSelf: 'center',
   },
   sectionText: {

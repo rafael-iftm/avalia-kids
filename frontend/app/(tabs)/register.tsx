@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
   },
   registerImage: {
-    width: 200,
+    width: 250,
     height: 200,
     marginBottom: 20,
     alignSelf: 'center',

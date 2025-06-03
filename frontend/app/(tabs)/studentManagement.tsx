@@ -164,7 +164,7 @@ export default function StudentManagementScreen() {
   return (
     <>
       <CustomHeaderBar
-        title="Alunos"
+        title="Crianças"
         leftIcon={{ name: "arrow-back-outline", route: routes.home }}
         rightIcon={{ name: "log-out-outline", route: routes.login }}
       />

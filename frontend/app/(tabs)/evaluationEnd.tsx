@@ -19,27 +19,27 @@ export default function EvaluationEndScreen() {
   return (
     <View style={styles.container}>
       <CustomHeaderBar
-        title="Avaliação"
+        title="Fim da Avaliação"
       />
 
       <View style={styles.content}>
         {/* Imagem do foguete */}
         <Image
-          source={getImageUrl({ folder: 'default', filename: 'rocket' })}
-          style={styles.rocketImage}
+          source={getImageUrl({ folder: 'default', filename: 'evaluation-end' })}
+          style={styles.evaluationEndImage}
           contentFit="contain"
           cachePolicy="none"
         />
 
         {/* Título de Parabéns */}
         <Text style={styles.title}>
-          Parabéns por finalizar <Text style={styles.emoji}>🚀🎉</Text>
+          Missão cumprida! <Text style={styles.emoji}>🚀🎉</Text>
         </Text>
 
         {/* Texto de agradecimento */}
         <Text style={styles.subtitle}>
-          Você completou o desafio com muita dedicação e inteligência!{'\n\n'}
-          Que incrível ver seu esforço!
+        Você completou a avaliação com muita dedicação e energia!{'\n\n'}
+        Estamos muito orgulhosos de você!
         </Text>
 
         {/* Botão para voltar ao início */}
@@ -47,8 +47,13 @@ export default function EvaluationEndScreen() {
           style={styles.button}
           onPress={() => router.replace(routes.home)}
         >
-          <Text style={styles.buttonText}>Voltar ao início</Text>
+          <Text style={styles.buttonText}>Voltar ao menu</Text>
         </TouchableOpacity>
+
+        <Text style={styles.infoText}>
+          Os resultados podem ser consultados na aba <Text style={styles.bold}>Minhas Crianças</Text> no menu principal.
+        </Text>
+
       </View>
     </View>
   );
@@ -64,11 +69,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 100
+    marginBottom: 50
   },
-  rocketImage: {
-    width: 200,
-    height: 200,
+  evaluationEndImage: {
+    width: 250,
+    height: 250,
     marginBottom: 20,
   },
   title: {
@@ -98,5 +103,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  infoText: {
+    fontSize: 13,
+    color: '#444',
+    textAlign: 'center',
+    marginTop: 24,
+    marginHorizontal: 20,
+    lineHeight: 20,
+  },
+  bold: {
+    fontWeight: '600',
   },
 });

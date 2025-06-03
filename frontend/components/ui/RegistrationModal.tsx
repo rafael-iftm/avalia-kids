@@ -88,16 +88,16 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({ visible, onClose,
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Cadastrar Aluno</Text>
+          <Text style={styles.modalTitle}>Cadastrar Criança</Text>
           <TextInput
-            placeholder="Nome completo"
+            placeholder="Digite o nome da criança"
             placeholderTextColor="#A0A0A0"
             value={name}
             onChangeText={handleNameChange}
             style={styles.input}
           />
           <TextInput
-            placeholder="Data de nascimento (DD/MM/AAAA)"
+            placeholder="Digite a data de nascimento da criança"
             placeholderTextColor="#A0A0A0"
             value={birthDate}
             onChangeText={handleBirthDateChange}
