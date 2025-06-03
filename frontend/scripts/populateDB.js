@@ -49,7 +49,7 @@ async function populateDatabase() {
     const userInsertResult = await dbUsers.collection("users").insertMany(users);
     console.log("✅ Usuários criados!");
 
-    const parentId = userInsertResult.insertedIds[1].toString();
+    const parentId = userInsertResult.insertedIds[0].toString();
     console.log(`✅ PARENT_ID recuperado: ${parentId}`);
 
     // Criar estudantes (banco students)
@@ -106,7 +106,7 @@ async function populateDatabase() {
             text: pergunta.text,
             options: pergunta.options,
             correctOption: pergunta.correctOption,
-            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/questions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.jpeg?alt=media`,
+            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/assets%2Fimages%2Fjpeg%2Fquestions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.jpeg?alt=media`,
             classLevel: classLevel,
           });
         });
