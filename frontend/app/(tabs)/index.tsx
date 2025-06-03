@@ -4,7 +4,7 @@ import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function IndexScreen() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function IndexScreen() {
           {/* Imagem do logo */}
         <Image
           source={getImageUrl({ folder: 'default', filename: 'logo' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'logo' })}
           style={styles.logo}
           contentFit="contain"
           cachePolicy="none"
@@ -32,6 +33,7 @@ export default function IndexScreen() {
         {/* Mascote */}
         <Image
           source={getImageUrl({ folder: 'default', filename: 'mascote' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'mascote' })}
           style={styles.mascot}
           contentFit="contain"
           cachePolicy="none"

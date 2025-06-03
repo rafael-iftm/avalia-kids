@@ -13,7 +13,7 @@ import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function WelcomeScreen() {
   const [userName, setUserName] = useState('');
@@ -52,6 +52,7 @@ export default function WelcomeScreen() {
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
         <Image
           source={getImageUrl({ folder: 'default', filename: 'evaluation-icon' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'evaluation-icon' })}
           style={styles.mascotImage}
           contentFit="contain"
           cachePolicy="none"

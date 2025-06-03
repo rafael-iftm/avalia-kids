@@ -24,7 +24,7 @@ import { getAuthToken } from "@/utils/auth";
 import { Image } from 'expo-image';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
 import SuccessAnimation from "@/components/ui/SuccessAnimation";
-import { getImageUrl } from "@/utils/storage";
+import { getImageUrl, getPlaceholderUrl } from "@/utils/storage";
 
 export default function QuizScreen() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -124,6 +124,7 @@ export default function QuizScreen() {
         <View style={styles.emptyContent}>
         <Image
           source={getImageUrl({ folder: 'default', filename: 'no-questions' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'no-questions' })}
           style={styles.emptyImage}
           contentFit="contain"
           cachePolicy="none"
@@ -185,6 +186,7 @@ export default function QuizScreen() {
       >
         <Image
           source={question.imageUrl}
+          placeholder={question.placeholderUrl}
           style={styles.image}
           contentFit="contain"
           cachePolicy="none"

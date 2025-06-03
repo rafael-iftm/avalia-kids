@@ -11,7 +11,7 @@ import { registerUser } from '@/services/authService';
 import { Alert } from 'react-native';
 import axios from 'axios';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -137,6 +137,7 @@ export default function RegisterScreen() {
         <View style={styles.content}>
           <Image
             source={getImageUrl({ folder: 'default', filename: 'register' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'register' })}
             style={styles.registerImage}
             contentFit="contain"
             cachePolicy="none"

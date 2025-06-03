@@ -26,6 +26,7 @@ export default function EvaluationEndScreen() {
         {/* Imagem do foguete */}
         <Image
           source={getImageUrl({ folder: 'default', filename: 'evaluation-end' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'evaluation-end' })}
           style={styles.evaluationEndImage}
           contentFit="contain"
           cachePolicy="none"

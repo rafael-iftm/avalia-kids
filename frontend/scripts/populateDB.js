@@ -106,7 +106,8 @@ async function populateDatabase() {
             text: pergunta.text,
             options: pergunta.options,
             correctOption: pergunta.correctOption,
-            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/assets%2Fimages%2Fjpeg%2Fquestions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.jpeg?alt=media`,
+            imageUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/assets%2Fimages%2Fwebp%2Fquestions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.webp?alt=media`,
+            placeholderUrl: `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/assets%2Fimages%2Fwebp%2Fplaceholders%2Fquestions%2F${normalizedClassLevel}_${normalizedMateria}_${index}.webp?alt=media`,
             classLevel: classLevel,
           });
         });

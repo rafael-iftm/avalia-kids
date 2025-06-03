@@ -4,6 +4,7 @@ export interface Question {
     options: string[];
     correctOption: string;
     imageUrl: string;
+    placeholderUrl: string;
     classLevel: string;
   }
   

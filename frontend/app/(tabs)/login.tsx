@@ -14,7 +14,7 @@ import { storeAuthToken } from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStudentsByParent } from '@/services/studentService';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -119,6 +119,7 @@ export default function LoginScreen() {
         <View style={styles.content}>
           <Image
             source={getImageUrl({ folder: 'default', filename: 'login' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'login' })}
             style={styles.loginImage}
             contentFit="contain"
             cachePolicy="none"

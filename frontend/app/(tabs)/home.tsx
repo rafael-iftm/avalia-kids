@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -48,6 +48,7 @@ export default function HomeScreen() {
 
       <Image
         source={getImageUrl({ folder: 'default', filename: 'mascote' })}
+        placeholder={getPlaceholderUrl({ folder: 'default', filename: 'mascote' })}
         style={styles.mascotImage}
         contentFit="contain"
         cachePolicy="none"
@@ -59,6 +60,7 @@ export default function HomeScreen() {
         >
           <Image
             source={getImageUrl({ folder: 'default', filename: 'students-icon' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'students-icon' })}
             style={styles.iconImage}
             contentFit="contain"
             cachePolicy="none"
@@ -72,6 +74,7 @@ export default function HomeScreen() {
         >
           <Image
             source={getImageUrl({ folder: 'default', filename: 'evaluation-icon' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'evaluation-icon' })}
             style={styles.iconImage}
             contentFit="contain"
             cachePolicy="none"

@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 interface Props {
   studentsCount: number;
@@ -30,6 +30,7 @@ export default function StudentListHeader({
       <View style={styles.summary}>
         <Image
           source={getImageUrl({ folder: 'default', filename: 'total-kids' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'total-kids' })}
           style={styles.totalKidsImage}
           contentFit="contain"
           cachePolicy="none"

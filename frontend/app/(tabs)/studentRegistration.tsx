@@ -22,7 +22,7 @@ import { getAuthToken } from '@/utils/auth';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 
 export default function StudentRegistrationScreen() {
@@ -154,6 +154,7 @@ export default function StudentRegistrationScreen() {
 
           <Image
             source={getImageUrl({ folder: 'default', filename: 'student-registration' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'student-registration' })}
             style={styles.studentRegistrationImage}
             contentFit="contain"
             cachePolicy="none"

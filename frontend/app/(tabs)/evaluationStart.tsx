@@ -24,7 +24,7 @@ import { Student } from '@/types/Student';
 import { getAuthToken } from '@/utils/auth';
 import { fetchStudentResults, fetchTotalQuestions } from '@/services/quizService';
 import { Image } from 'expo-image';
-import { getImageUrl } from '@/utils/storage';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 
 export default function EvaluationStartScreen() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -155,6 +155,7 @@ export default function EvaluationStartScreen() {
         <View style={styles.content}>
           <Image
             source={getImageUrl({ folder: 'default', filename: 'evaluation-start' })}
+            placeholder={getPlaceholderUrl({ folder: 'default', filename: 'evaluation-start' })}
             style={styles.evaluationImage}
             contentFit="contain"
             cachePolicy="none"
