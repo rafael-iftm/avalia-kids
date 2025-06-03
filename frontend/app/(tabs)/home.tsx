@@ -39,13 +39,12 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <CustomHeaderBar
         title="Menu"
-        //leftIcon={{ name: 'settings-outline', route: routes.settings }} [REMOVER NA V2]
         rightIcon={{ name: 'log-out-outline', route: routes.login }}
       />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.greeting}>Olá, {userName || 'Visitante'}!</Text>
-        <Text style={styles.question}>O que deseja fazer?</Text>
+        <Text style={styles.question}>Como podemos ajudar sua criança a aprender hoje?</Text>
 
       <Image
         source={getImageUrl({ folder: 'default', filename: 'mascote' })}
@@ -64,7 +63,7 @@ export default function HomeScreen() {
             contentFit="contain"
             cachePolicy="none"
           />
-          <Text style={styles.buttonText}>Gerenciar Alunos</Text>
+          <Text style={styles.buttonText}>Minhas Crianças</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -77,7 +76,7 @@ export default function HomeScreen() {
             contentFit="contain"
             cachePolicy="none"
           />
-          <Text style={styles.buttonText}>Realizar Avaliações</Text>
+          <Text style={styles.buttonText}>Iniciar Avaliação</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 30,
+    marginBottom: 80,
   },
   greeting: {
     fontSize: 26,
@@ -102,7 +101,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     marginBottom: 10,
-    marginTop: -200,
   },
   question: {
     fontSize: 18,
