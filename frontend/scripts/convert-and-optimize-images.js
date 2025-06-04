@@ -47,24 +47,34 @@ async function optimizePngInPlace(filePath) {
 
 async function generatePlaceholders(inputPath, relativePath) {
   try {
-    // Destinos
-    const placeholderPngPath = path.join(placeholderPngOutput, relativePath);
-    const placeholderWebpPath = path.join(placeholderWebpOutput, relativePath).replace(/\.png$/, '.webp');
+    const relativeDir = path.dirname(relativePath);
+    const fileName = path.basename(relativePath).replace(/\.png$/, '');
 
-    // Criar versao PNG (opaca e desaturada)
+    const placeholderPngPath = path.join(pngInputRoot, 'placeholders', relativeDir, `${fileName}.png`);
+    const placeholderWebpPath = path.join(webpOutputRoot, 'placeholders', relativeDir, `${fileName}.webp`);
+
     await fs.ensureDir(path.dirname(placeholderPngPath));
     await sharp(inputPath)
-      .resize({ width: MAX_WIDTH })
+      .resize({
+        width: MAX_WIDTH,
+        height: MAX_WIDTH,
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 0 },
+      })
       .blur(10)
       .modulate({ brightness: 1.2, saturation: 0.2 })
       .png({ quality: 60 })
       .toFile(placeholderPngPath);
     console.log(chalk.magenta('🟪 Placeholder PNG :'), chalk.gray(placeholderPngPath));
 
-    // Criar versão WebP
     await fs.ensureDir(path.dirname(placeholderWebpPath));
     await sharp(inputPath)
-      .resize({ width: MAX_WIDTH })
+      .resize({
+        width: MAX_WIDTH,
+        height: MAX_WIDTH,
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 0 },
+      })
       .blur(10)
       .modulate({ brightness: 1.2, saturation: 0.2 })
       .webp({ quality: 60 })
@@ -97,6 +107,18 @@ async function processFolder(currentFolder) {
 }
 
 (async () => {
+  console.log(chalk.blue.bold('\n🧹 Limpando pastas antigas...\n'));
+
+  try {
+    await fs.remove(webpOutputRoot); // remove toda a pasta webp (inclusive /placeholders)
+    console.log(chalk.gray('🗑️ Pasta removida:'), 'assets/images/webp');
+
+    await fs.remove(placeholderPngOutput); // remove apenas /placeholders de PNG
+    console.log(chalk.gray('🗑️ Pasta removida:'), 'assets/images/png/placeholders');
+  } catch (err) {
+    console.log(chalk.red('❌ Erro ao remover pastas:'), err.message);
+  }
+
   console.log(chalk.blue.bold('\n🔄 Iniciando otimização de imagens PNG, conversão para WebP e geração de placeholders...\n'));
   const start = Date.now();
   await processFolder(pngInputRoot);
