@@ -32,6 +32,10 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getPath().toString();
 
+        if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
+            return chain.filter(exchange);
+        }
+
         if (publicPaths.contains(path)) {
             return chain.filter(exchange);
         }
