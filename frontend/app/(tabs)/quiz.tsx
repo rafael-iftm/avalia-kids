@@ -141,9 +141,6 @@ export default function QuizScreen() {
   const totalQuestions = questions.length;
   const question = questions[currentQuestionIndex];
 
-{console.log('📷 Image URL:', question.imageUrl)}
-{console.log('🟪 Placeholder URL:', question.placeholderUrl)}
-
   const handleAnswerPress = (option: string) => {
     setSelectedAnswer(option);
     submitAnswerToAPI(question.id, option);
