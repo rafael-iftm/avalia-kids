@@ -12,8 +12,9 @@ public class Question {
     private String text;
     private List<String> options;
     private String correctOption;
-    private String imageUrl; // URL da imagem armazenada (ex: Firebase Storage, S3, etc.)
-    private String classLevel; // Exemplo: "1º Ano", "2º Ano"
+    private String imageUrl;
+    private String placeholderUrl;
+    private String classLevel;
     
     public Question(String text, List<String> options, String correctOption, String imageUrl, String classLevel) {
         this.text = text;
@@ -69,5 +70,13 @@ public class Question {
 
     public void setClassLevel(String classLevel) {
         this.classLevel = classLevel;
+    }
+
+    public String getPlaceholderUrl() {
+        return placeholderUrl;
+    }
+
+    public void setPlaceholderUrl(String placeholderUrl) {
+        this.placeholderUrl = placeholderUrl;
     }
 }

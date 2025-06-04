@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   question: {
     fontSize: 18,
     color: '#555',
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 40,
   },
   mascotImage: {
     width: 200,

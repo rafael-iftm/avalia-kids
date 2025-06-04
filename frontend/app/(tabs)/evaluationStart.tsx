@@ -32,6 +32,7 @@ export default function EvaluationStartScreen() {
   const [selectedStudentName, setSelectedStudentName] = useState('Selecione uma criança');
   const [password, setPassword] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const navigation = useNavigation();
@@ -196,13 +197,20 @@ export default function EvaluationStartScreen() {
           </Modal>
 
           <Text style={styles.sectionText}>2. Confirme com a sua senha para continuar:</Text>
-          <TextInput
-            placeholder="Digite sua senha"
-            secureTextEntry
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Digite sua senha"
+              placeholderTextColor="#888888"
+              secureTextEntry={!passwordVisible}
+              style={styles.passwordInput}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
+              <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={20} color="#666" />
+            </TouchableOpacity>
+          </View>
+
 
           <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
             <Text style={styles.buttonText}>Continuar</Text>
@@ -253,16 +261,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  input: {
-    height: 50,
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#CCCCCC',
     backgroundColor: '#F9F9F9',
     borderRadius: 8,
     paddingHorizontal: 15,
+    marginBottom: 15,
+  },
+  passwordInput: {
+    flex: 1,
+    height: 50,
     fontSize: 16,
-    width: '100%',
-    marginBottom: 20,
   },
   continueButton: {
     backgroundColor: '#1B3C87',
