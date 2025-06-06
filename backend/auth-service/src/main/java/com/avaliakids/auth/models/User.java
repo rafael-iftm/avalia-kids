@@ -12,6 +12,7 @@ public class User {
     private String email;
     private String password;
     private String role;
+    private String resetToken;
 
     public String getId() {
         return id;
@@ -51,5 +52,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 }

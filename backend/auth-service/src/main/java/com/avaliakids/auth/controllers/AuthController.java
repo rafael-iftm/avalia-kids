@@ -1,6 +1,8 @@
 package com.avaliakids.auth.controllers;
 
+import com.avaliakids.auth.dtos.ForgotPasswordRequest;
 import com.avaliakids.auth.dtos.LoginRequest;
+import com.avaliakids.auth.dtos.ResetPasswordRequest;
 import com.avaliakids.auth.exceptions.InvalidRoleException;
 import com.avaliakids.auth.exceptions.UserAlreadyExistsException;
 import com.avaliakids.auth.models.User;
@@ -69,5 +71,21 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(Map.of("isValid", true));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authService.generateResetToken(request.getEmail());
+        return ResponseEntity.ok(Map.of("message", "E-mail enviado com sucesso."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
+        boolean success = authService.resetPassword(request.getToken(), request.getNewPassword());
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Senha redefinida com sucesso."));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Token inválido."));
+        }
     }
 }

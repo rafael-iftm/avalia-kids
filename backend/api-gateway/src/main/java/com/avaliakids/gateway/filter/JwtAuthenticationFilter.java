@@ -25,7 +25,9 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     private final List<String> publicPaths = List.of(
         "/auth-service/auth/login",
         "/auth-service/auth/register",
-        "/auth-service/auth/validate-password"
+        "/auth-service/auth/validate-password",
+        "/auth-service/auth/forgot-password",
+        "/auth-service/auth/reset-password"
     );
 
     @Override

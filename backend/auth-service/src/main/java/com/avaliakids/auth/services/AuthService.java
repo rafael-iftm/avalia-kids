@@ -9,10 +9,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Service
 public class AuthService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -54,12 +59,6 @@ public class AuthService {
         return jwtUtil.generateToken(email, role); // Agora passamos a role corretamente
     }
 
-    /**
-     * 🔹 Valida a senha do responsável (PARENT)
-     * @param parentId - ID do usuário responsável
-     * @param password - Senha digitada pelo responsável
-     * @return true se a senha estiver correta, false caso contrário
-     */
     public boolean validateParentPassword(String parentId, String password) {
         Optional<User> userOpt = userRepository.findById(parentId);
         if (userOpt.isEmpty()) {
@@ -68,5 +67,37 @@ public class AuthService {
 
         User user = userOpt.get();
         return passwordEncoder.matches(password, user.getPassword()); // Verifica se a senha está correta
+    }
+
+
+    public void generateResetToken(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            logger.warn("Tentativa de recuperação para e-mail inexistente: {}", email);
+            return;
+        }
+
+        User user = userOpt.get();
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        userRepository.save(user);
+
+        logger.info("🔐 Token de recuperação gerado para {}: {}", email, token);
+        logger.info("🔗 Link simulado: http://localhost:5173/reset-password?token={}", token);
+    }
+
+    public boolean resetPassword(String token, String newPassword) {
+        Optional<User> userOpt = userRepository.findAll()
+            .stream()
+            .filter(user -> token.equals(user.getResetToken()))
+            .findFirst();
+
+        if (userOpt.isEmpty()) return false;
+
+        User user = userOpt.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        userRepository.save(user);
+        return true;
     }
 }
