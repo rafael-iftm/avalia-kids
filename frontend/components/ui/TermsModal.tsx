@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import { getContentUrl } from '@/utils/storage';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import terms from '@/assets/content/terms.json';
 
 interface Props {
   visible: boolean;
@@ -17,7 +17,22 @@ interface Props {
 
 export default function TermsModal({ visible, onClose, onAccept }: Props) {
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
+  const [termsText, setTermsText] = useState<string>('');
   const scrollRef = useRef<ScrollView>(null);
+  
+    useEffect(() => {
+    if (visible) {
+        const url = getContentUrl('terms');
+
+        fetch(url)
+        .then((response) => response.json())
+        .then((data) => setTermsText(data.terms))
+        .catch((err) => {
+            console.error('Erro ao carregar os termos:', err);
+            setTermsText('Não foi possível carregar os termos no momento.');
+        });
+    }
+    }, [visible]);
 
   const handleScroll = (event: any) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -40,8 +55,7 @@ export default function TermsModal({ visible, onClose, onAccept }: Props) {
             scrollEventThrottle={16}
           >
             <Text style={styles.termsText}>
-              {/* Conteúdo fictício de exemplo */}
-              {terms.terms}
+              {termsText || 'Carregando termos...'}
             </Text>
           </ScrollView>
 

@@ -1,6 +1,7 @@
 type ImageFolder = 'default' | 'questions';
 type FolderExtensionMap = Record<ImageFolder, 'png' | 'webp'>;
 type AnimationName = 'success';
+type ContentName = 'terms';
 
 const folderExtensions: FolderExtensionMap = {
   default: 'webp',
@@ -23,6 +24,11 @@ export function getImageUrl({
 
 export function getAnimationUrl(name: AnimationName) {
   const encodedPath = encodeURIComponent(`assets/animations/${name}.json`);
+  return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
+}
+
+export function getContentUrl(name: ContentName) {
+  const encodedPath = encodeURIComponent(`assets/content/${name}.json`);
   return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
 }
 
