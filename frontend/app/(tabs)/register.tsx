@@ -12,6 +12,8 @@ import { Alert } from 'react-native';
 import axios from 'axios';
 import { Image } from 'expo-image';
 import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
+import TermsModal from '@/components/ui/TermsModal';
+
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -21,6 +23,7 @@ export default function RegisterScreen() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -197,10 +200,30 @@ export default function RegisterScreen() {
           {/* Aceitação de termos */}
           <View style={styles.checkboxContainer}>
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)} style={styles.checkbox}>
-              <Ionicons name={isChecked ? 'checkbox' : 'square-outline'} size={24} color={isChecked ? '#1B3C87' : '#666'} />
+              <Ionicons
+                name={isChecked ? 'checkbox' : 'square-outline'}
+                size={24}
+                color={isChecked ? '#1B3C87' : '#666'}
+              />
             </TouchableOpacity>
-            <Text style={styles.checkboxLabel}>Aceito os termos e condições de uso</Text>
+
+            <Text style={styles.checkboxLabel}>
+              Aceito os{' '}
+              <Text style={styles.linkText} onPress={() => setIsModalVisible(true)}>
+                termos e condições de uso
+              </Text>
+            </Text>
           </View>
+
+          {/* Modal de termos e condições */}
+          <TermsModal
+            visible={isModalVisible}
+            onClose={() => setIsModalVisible(false)}
+            onAccept={() => {
+              setIsChecked(true);
+              setIsModalVisible(false);
+            }}
+          />
 
           {/* Botão de continuar */}
           <TouchableOpacity
@@ -297,7 +320,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   checkboxLabel: {
-    color: '#666',
     fontSize: 14,
+  },
+  linkText: {
+    color: '#1B3C87',
+    textDecorationLine: 'underline',
+    fontWeight: '500',
   },
 });
