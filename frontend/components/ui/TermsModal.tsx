@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import terms from '@/assets/content/terms.json';
 
 interface Props {
   visible: boolean;
@@ -40,7 +41,7 @@ export default function TermsModal({ visible, onClose, onAccept }: Props) {
           >
             <Text style={styles.termsText}>
               {/* Conteúdo fictício de exemplo */}
-              Bem-vindo ao Avalia Kids!\n\nAo utilizar nosso aplicativo, você concorda com os seguintes termos: \n\n1. Você é responsável por manter suas credenciais em segurança.\n2. Os dados coletados são utilizados para fins pedagógicos.\n3. Não é permitido utilizar o aplicativo de forma indevida.\n\nLeia todos os termos cuidadosamente antes de continuar.\n\nAo chegar até o final desta leitura, você poderá aceitar os termos e seguir com o cadastro.\n\nObrigado por usar nosso app! ❤
+              {terms.terms}
             </Text>
           </ScrollView>
 
