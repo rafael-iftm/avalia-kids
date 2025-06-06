@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
+import { Image } from 'expo-image';
+import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
+import { validateEmail } from '@/utils/validation';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
-  const [inputError, setInputError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -18,39 +20,41 @@ export default function ForgotPasswordScreen() {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const validateInput = (value: string) => {
+  const handleEmailChange = (value: string) => {
     setEmail(value);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(value)) {
-      setInputError('Insira um e-mail válido.');
-    } else {
-      setInputError('');
-    }
+    setEmailError(validateEmail(value) ? '' : 'Insira um e-mail válido.');
   };
 
   const isFormValid = () => {
-    return email.trim() !== '' && inputError === '';
+    return validateEmail(email);
   };
 
   return (
     <View style={styles.container}>
       <CustomHeaderBar
-        leftIcon={{ name: 'arrow-back-outline', route: routes.index }}
+        title="Recuperar Senha"
+        leftIcon={{ name: 'arrow-back-outline', route: routes.login }}
       />
-      <View style={styles.content}>
-        {/* Título */}
-        <Text style={styles.title}>Recupere sua senha</Text>
 
-        {/* Campo de e-mail */}
-        <TextInput 
-          placeholder="Email" 
-          placeholderTextColor="#888888"
-          style={styles.input} 
-          value={email} 
-          onChangeText={validateInput} 
+      <View style={styles.content}>
+        <Image
+          source={getImageUrl({ folder: 'default', filename: 'forgot-password' })}
+          placeholder={getPlaceholderUrl({ folder: 'default', filename: 'forgot-password' })}
+          style={styles.forgotPasswordImage}
+          contentFit="contain"
+          cachePolicy="none"
         />
-        {inputError ? <Text style={styles.errorText}>{inputError}</Text> : null}
+        
+        {/* Campo de e-mail */}
+        <TextInput
+          placeholder="Digite seu e-mail"
+          placeholderTextColor="#888888"
+          style={styles.input}
+          value={email}
+          onChangeText={handleEmailChange}
+          keyboardType="email-address"
+        />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
         {/* Botão de continuar */}
         <TouchableOpacity 
@@ -78,18 +82,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
+    marginBottom: 100,
   },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 30,
-    marginTop: -200,
+  forgotPasswordImage: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   input: {
     height: 50,
