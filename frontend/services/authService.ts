@@ -46,4 +46,15 @@ export const validateParentPassword = async (parentId: string, password: string)
     // Se não for erro HTTP (por exemplo, erro de conexão)
     return { isValid: false, message: "Erro de conexão. Verifique sua internet." };
   }
+  
+};
+
+export const requestPasswordReset = async (email: string): Promise<{ message: string }> => {
+  const response = await api.post('/auth-service/auth/forgot-password', { email });
+  return response.data;
+};
+
+export const resetPassword = async (token: string, newPassword: string): Promise<{ message: string }> => {
+  const response = await api.post('/auth-service/auth/reset-password', { token, newPassword });
+  return response.data;
 };

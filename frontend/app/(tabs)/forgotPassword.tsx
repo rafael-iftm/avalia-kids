@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useRouter, useNavigation } from 'expo-router';
 import CustomHeaderBar from '@/components/ui/CustomHeaderBar';
 import { routes } from '@/routes';
 import { Image } from 'expo-image';
 import { getImageUrl, getPlaceholderUrl } from '@/utils/storage';
 import { validateEmail } from '@/utils/validation';
+import SuccessModal from '@/components/ui/SuccessModal';
+import { requestPasswordReset } from '@/services/authService';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -25,8 +26,17 @@ export default function ForgotPasswordScreen() {
     setEmailError(validateEmail(value) ? '' : 'Insira um e-mail válido.');
   };
 
-  const isFormValid = () => {
-    return validateEmail(email);
+  const isFormValid = () => validateEmail(email);
+
+  const handleForgotPassword = async () => {
+    try {
+      const { message } = await requestPasswordReset(email);
+      console.log('[ForgotPassword] Sucesso:', message);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.log('[ForgotPassword] Erro:', error);
+      Alert.alert('Erro', 'Não foi possível enviar o e-mail. Verifique o endereço ou tente novamente.');
+    }
   };
 
   return (
@@ -44,7 +54,7 @@ export default function ForgotPasswordScreen() {
           contentFit="contain"
           cachePolicy="none"
         />
-        
+
         {/* Campo de e-mail */}
         <TextInput
           placeholder="Digite seu e-mail"
@@ -57,9 +67,10 @@ export default function ForgotPasswordScreen() {
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
         {/* Botão de continuar */}
-        <TouchableOpacity 
-          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]} 
+        <TouchableOpacity
+          style={[styles.primaryButton, !isFormValid() && styles.buttonDisabled]}
           disabled={!isFormValid()}
+          onPress={handleForgotPassword}
         >
           <Text style={styles.primaryButtonText}>Continuar</Text>
         </TouchableOpacity>
@@ -69,6 +80,8 @@ export default function ForgotPasswordScreen() {
           <Text style={styles.linkText}>Ainda não possui uma conta? Cadastre-se aqui</Text>
         </TouchableOpacity>
       </View>
+
+      <SuccessModal visible={showSuccessModal} onClose={() => setShowSuccessModal(false)} message={'E-mail enviado com sucesso.'} />
     </View>
   );
 }

@@ -15,3 +15,7 @@ eureka:
 
 jwt:
   secret: minha-chave-secreta-supersegura1234567890
+
+sendgrid:
+  api-key: secret_sendgrid_api_key
+  from-email: no-reply@avaliakids.net.br

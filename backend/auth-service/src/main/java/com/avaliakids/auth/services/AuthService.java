@@ -5,6 +5,10 @@ import com.avaliakids.auth.exceptions.UserAlreadyExistsException;
 import com.avaliakids.auth.models.User;
 import com.avaliakids.auth.repositories.UserRepository;
 import com.avaliakids.auth.utils.JwtUtil;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,9 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class AuthService {
+
+    @Autowired
+    private EmailService emailService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
@@ -69,7 +76,6 @@ public class AuthService {
         return passwordEncoder.matches(password, user.getPassword()); // Verifica se a senha está correta
     }
 
-
     public void generateResetToken(String email) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) {
@@ -82,8 +88,13 @@ public class AuthService {
         user.setResetToken(token);
         userRepository.save(user);
 
-        logger.info("🔐 Token de recuperação gerado para {}: {}", email, token);
-        logger.info("🔗 Link simulado: http://localhost:5173/reset-password?token={}", token);
+        String resetLink = "http://localhost:5173/reset-password?token=" + token;
+
+        try {
+            emailService.sendResetPasswordEmail(email, resetLink);
+        } catch (IOException e) {
+            logger.error("Erro ao enviar e-mail: {}", e.getMessage());
+        }
     }
 
     public boolean resetPassword(String token, String newPassword) {
