@@ -1,47 +1,58 @@
 type ImageFolder = 'default' | 'questions';
-type FolderExtensionMap = Record<ImageFolder, 'png' | 'webp'>;
 type AnimationName = 'success';
 type ContentName = 'terms';
 
-const folderExtensions: FolderExtensionMap = {
-  default: 'webp',
-  questions: 'webp',
-};
+const FIREBASE_BASE_URL = 'https://firebasestorage.googleapis.com/v0/b/avalia-kids.firebasestorage.app/o';
+const IMAGE_EXTENSION = 'webp';
 
+/**
+ * Constrói uma URL para um arquivo hospedado no Firebase Storage.
+ */
+function buildFirebaseUrl(path: string): string {
+  const encodedPath = encodeURIComponent(path);
+  return `${FIREBASE_BASE_URL}/${encodedPath}?alt=media`;
+}
+
+/**
+ * Retorna a URL de uma imagem.
+ */
 export function getImageUrl({
   folder = 'default',
   filename,
 }: {
   folder?: ImageFolder;
   filename: string;
-}) {
-  const extension = folderExtensions[folder];
-  const fullName = `${filename}.${extension}`;
-
-  const encodedPath = encodeURIComponent(`assets/images/${extension}/${folder}/${fullName}`);
-  return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
+}): string {
+  const path = `assets/images/${IMAGE_EXTENSION}/${folder}/${filename}.${IMAGE_EXTENSION}`;
+  return buildFirebaseUrl(path);
 }
 
-export function getAnimationUrl(name: AnimationName) {
-  const encodedPath = encodeURIComponent(`assets/animations/${name}.json`);
-  return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
-}
-
-export function getContentUrl(name: ContentName) {
-  const encodedPath = encodeURIComponent(`assets/content/${name}.json`);
-  return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
-}
-
+/**
+ * Retorna a URL de um placeholder de imagem.
+ */
 export function getPlaceholderUrl({
   folder = 'default',
   filename,
 }: {
   folder?: ImageFolder;
   filename: string;
-}) {
-  const extension = folderExtensions[folder];
-  const fullName = `${filename}.${extension}`;
+}): string {
+  const path = `assets/images/${IMAGE_EXTENSION}/placeholders/${folder}/${filename}.${IMAGE_EXTENSION}`;
+  return buildFirebaseUrl(path);
+}
 
-  const encodedPath = encodeURIComponent(`assets/images/${extension}/placeholders/${folder}/${fullName}`);
-  return `https://firebasestorage.googleapis.com/v0/b/avaliakids.firebasestorage.app/o/${encodedPath}?alt=media`;
+/**
+ * Retorna a URL de uma animação Lottie.
+ */
+export function getAnimationUrl(name: AnimationName): string {
+  const path = `assets/animations/${name}.json`;
+  return buildFirebaseUrl(path);
+}
+
+/**
+ * Retorna a URL de um conteúdo JSON.
+ */
+export function getContentUrl(name: ContentName): string {
+  const path = `assets/content/${name}.json`;
+  return buildFirebaseUrl(path);
 }
