@@ -88,7 +88,7 @@ public class AuthService {
         user.setResetToken(token);
         userRepository.save(user);
 
-        String resetLink = "http://localhost:5173/reset-password?token=" + token;
+        String resetLink = "https://avaliakids.net.br/reset-password?token=" + token;
 
         try {
             emailService.sendResetPasswordEmail(email, resetLink);
